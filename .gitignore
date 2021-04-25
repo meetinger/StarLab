@@ -1,0 +1,10 @@
+
+.idea/
+
+generator/__pycache__/
+
+StarLab/__pycache__/
+
+generator/migrations/__pycache__/
+
+db.sqlite3
