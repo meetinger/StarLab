@@ -1,0 +1,17 @@
+.main{
+  width: 50%;
+  min-width: 53rem;
+  margin: auto;
+  font-family: Open Sans, serif;
+}
+html, body{
+  padding: 0!important;
+  margin: 0!important;
+}
+.body{
+  /*display: flex;*/
+  border: solid #0088ff;
+  border-radius: 0.65rem;
+  /*flex-wrap: wrap;*/
+  /*background-color: blanchedalmond;*/
+}
