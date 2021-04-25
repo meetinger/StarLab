@@ -15,3 +15,8 @@ html, body{
   /*flex-wrap: wrap;*/
   /*background-color: blanchedalmond;*/
 }
+.properties{
+  display: flex;
+  justify-content: space-evenly;
+  padding: 1rem;
+}

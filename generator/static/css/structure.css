@@ -1,0 +1,23 @@
+.shell{
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  margin: auto;
+  transition: 0.025s;
+  border: solid 0.1px gray;
+  //max-width: 25rem;
+  //max-height: 25rem;
+  border-radius: 25rem;
+}
+.matter-label{
+  margin: auto;
+  position: absolute;
+}
+.structure-wrapper{
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  height: 25rem;
+  width: 25rem;
+}
