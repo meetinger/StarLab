@@ -1,6 +1,6 @@
 <html lang="ru">
 <head>
-    <title>Title</title>
+    <title>StarLab</title>
     {% load static %}
     {#    <link rel="stylesheet" href="{% static 'css/fonts.css' %}">#}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
@@ -40,7 +40,7 @@
                         <form>
                             <div><small>Mass:</small></div>
                             <div>
-                                <input name="mass" type="text">
+                                <input name="mass" type="text" value="{{ curMass }}">
                             </div>
                             <button>Start!</button>
                         </form>
@@ -60,11 +60,14 @@
 </div>
 </body>
 {% load static %}
-<script src="{% static 'js/db.js' %}"></script>
+{#<script src="{% static 'js/db.js' %}"></script>#}
 <script src="{% static 'js/HRDiagram.js' %}"></script>
 <script src="{% static 'js/Structure.js' %}"></script>
 
 <script>
+
+    data = {{ data|safe }}
+
     let hrdiagram = new HRDiagram("hr-diagram")
     let structure = new Structure("structure")
 
@@ -81,7 +84,7 @@
         hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
         structure.setStructure(stage)
         setProp("age-label", stage.properties.age.toFixed(2))
-        setProp("luminosity-label", stage.properties.luminosity.toFixed(2))
+        setProp("luminosity-label", stage.properties.luminosity.toFixed(3))
         setProp("temperature-label", stage.properties.temperature.toFixed(2))
         setProp("radius-label", stage.properties.radius.toFixed(2))
         setProp("mass-label", stage.properties.mass.toFixed(2))

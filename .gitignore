@@ -8,3 +8,5 @@ StarLab/__pycache__/
 generator/migrations/__pycache__/
 
 db.sqlite3
+
+generator/utils/__pycache__/
