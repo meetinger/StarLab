@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <link rel="stylesheet" href="{% static 'css/hrdiagram.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/structure.css' %}">
 </head>
 <body>
 <div class="main">
@@ -27,10 +28,8 @@
                 <div class="hr-footer"></div>
             </div>
 
-            <div class="structure-wrapper">
-                <div class="structure" id="structure-id">
+            <div class="structure" id="structure">
 
-                </div>
             </div>
 
         </div>
@@ -72,15 +71,17 @@
     hrdiagram.genTrack(data)
 
 
-    function setStructureWrapper()
 
-    function setPointWrapper(L, T){
-        hrdiagram.setPoint(L, T)
+    function step(stage){
+        hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
+        structure.setStructure(stage)
     }
+
+
 
     let timeout = 100
     for (let i = 0; i < data.length; ++i){
-        setTimeout(setPointWrapper, timeout+=100, data[i].properties.luminosity, data[i].properties.temperature)
+        setTimeout(step, timeout+=100, data[i])
     }
 
 </script>

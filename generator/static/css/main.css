@@ -20,3 +20,7 @@ html, body{
   justify-content: space-evenly;
   padding: 1rem;
 }
+.section{
+  display: flex;
+  width: 100%;
+}

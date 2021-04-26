@@ -3,7 +3,7 @@ class Structure {
         this.obj = document.getElementById(id)
         this.divider = 1
         this.radius = 10
-        this.stage ={}
+        this.stage = {}
     }
 
     getRadius(L0, T) {
@@ -71,9 +71,9 @@ class Structure {
                 labelStyle = {color: "white"}
             }
 
-            return '<div style="'+shellStyle+'" class="shell">' +
-                '<div style="'+labelStyle+'" class="matter-label">i.matter</div>'+
-                this.genShells(arr, index+1);
+            return '<div style="' + shellStyle + '" class="shell">' +
+                '<div style="' + labelStyle + '" class="matter-label">i.matter</div>' +
+                this.genShells(arr, index + 1);
         } else {
             return;
         }
@@ -88,23 +88,39 @@ class Structure {
         return i;
     }
 
-    setStructure(stage){
-        this.obj.innerHTML = this.genStructure(stage);
+    setStructure(stage) {
+        if (this.divider === 1) {
+            this.obj.innerHTML = '<div class="structure-wrapper">' +
+                this.genStructure(stage) + '</div>';
+        } else {
+            this.obj.innerHTML = '<div class="structure-wrapper">' +
+                this.genStructure(stage) + '</div></div>' +
+                '<div style="text-align: right">Scale: 1/' + this.divider + '</div>';
+        }
     }
 
     genStructure(stage) {
         if (stage.structure === false) {
 
-            this.divider = this.getDivider(this.radius)
+            this.divider = this.getDivider(stage.properties.radius)
 
             let style = {
-                backgroundColor: "rgb(" + this.colorTemperatureToRGB(stage.temperature) + ")",
-                width: 2 * parseFloat(stage.radius) / this.divider + "rem",
-                height: 2 * parseFloat(stage.radius) / this.divider + "rem",
-                borderRadius: 2 * parseFloat(stage.radius) / this.divider + "rem",
+                width: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
+                height: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
+                "border-radius": 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
             }
 
-            return '<div> <div style="'+style+'" class="shell"></div>'
+            let styleStr = JSON.stringify(style)
+
+            styleStr = styleStr.substring(1, styleStr.length-1)
+
+            styleStr = styleStr.replaceAll("\"", "")
+
+            styleStr = styleStr.replaceAll(",", ";")
+
+            styleStr = "background-color: rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ");"+styleStr
+
+            return '<div> <div style="' + styleStr + '" class="shell"></div>'
         } else {
 
             this.divider = this.getDivider(stage.structure[0].size)
