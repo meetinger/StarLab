@@ -38,8 +38,8 @@ class HRDiagram {
 
     setPoint(L, T){
         let point = document.getElementById("hr-point")
-        point.style.top = 'calc(' + this.getYByLuminosity(L) + '% - 0.075rem)'
-        point.style.left = 'calc(' + this.getXByTemperature(T) + '% - 0.075rem)'
+        point.style.top = 'calc(' + this.getYByLuminosity(L) + '% - 0.25rem)'
+        point.style.left = 'calc(' + this.getXByTemperature(T) + '% - 0.25rem)'
     }
 
 }

@@ -80,11 +80,11 @@
     function step(stage){
         hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
         structure.setStructure(stage)
-        setProp("age-label", stage.properties.age)
-        setProp("luminosity-label", stage.properties.luminosity)
-        setProp("temperature-label", stage.properties.temperature)
-        setProp("radius-label", stage.properties.radius)
-        setProp("mass-label", stage.properties.mass)
+        setProp("age-label", stage.properties.age.toFixed(2))
+        setProp("luminosity-label", stage.properties.luminosity.toFixed(2))
+        setProp("temperature-label", stage.properties.temperature.toFixed(2))
+        setProp("radius-label", stage.properties.radius.toFixed(2))
+        setProp("mass-label", stage.properties.mass.toFixed(2))
         setProp("stage-label", stage.properties.stage)
     }
 
