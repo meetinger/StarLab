@@ -21,14 +21,14 @@
                     <div>Hertzsprung–Russell Diagram</div>
                     <div><b>Stage:</b></div>
                 </div>
-                <div class="hr-diagram">
-                    <div class="hr-point"></div>
+                <div class="hr-diagram" id="hr-diagram">
+                    <div class="hr-point" id="hr-point"></div>
                 </div>
                 <div class="hr-footer"></div>
             </div>
 
             <div class="structure-wrapper">
-                <div class="structure">
+                <div class="structure" id="structure-id">
 
                 </div>
             </div>
@@ -60,4 +60,28 @@
     </div>
 </div>
 </body>
+{% load static %}
+<script src="{% static 'js/db.js' %}"></script>
+<script src="{% static 'js/HRDiagram.js' %}"></script>
+<script src="{% static 'js/Structure.js' %}"></script>
+
+<script>
+    let hrdiagram = new HRDiagram("hr-diagram")
+    let structure = new Structure("structure")
+
+    hrdiagram.genTrack(data)
+
+
+    function setStructureWrapper()
+
+    function setPointWrapper(L, T){
+        hrdiagram.setPoint(L, T)
+    }
+
+    let timeout = 100
+    for (let i = 0; i < data.length; ++i){
+        setTimeout(setPointWrapper, timeout+=100, data[i].properties.luminosity, data[i].properties.temperature)
+    }
+
+</script>
 </html>
