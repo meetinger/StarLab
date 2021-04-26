@@ -20,7 +20,7 @@
             <div class="hr-diagram-wrapper">
                 <div class="hr-header text-center">
                     <div>Hertzsprung–Russell Diagram</div>
-                    <div><b>Stage:</b></div>
+                    <div><b>Stage: </b><span class="stage-label"></span></div>
                 </div>
                 <div class="hr-diagram" id="hr-diagram">
                     <div class="hr-point" id="hr-point"></div>
@@ -47,12 +47,12 @@
                     </div>
                 </div>
                 <div style="width: 45%">
-                    <div><b>Age:</b></div>
-                    <div><b>Luminosity:</b></div>
-                    <div><b>Temperature:</b></div>
-                    <div><b>Radius:</b></div>
-                    <div><b>Mass:</b></div>
-                    <div><b>Stage:</b></div>
+                    <div><b>Age: </b><span class="age-label"></span></div>
+                    <div><b>Luminosity: </b><span class="luminosity-label"></span></div>
+                    <div><b>Temperature: </b><span class="temperature-label"></span></div>
+                    <div><b>Radius: </b><span class="radius-label"></span></div>
+                    <div><b>Mass: </b><span class="mass-label"></span></div>
+                    <div><b>Stage: </b><span class="stage-label"></span></div>
                 </div>
             </div>
         </div>
@@ -70,14 +70,23 @@
 
     hrdiagram.genTrack(data)
 
-
+    function setProp(label, value){
+        labels = document.getElementsByClassName(label)
+        for(i of labels){
+            i.innerHTML=value
+        }
+    }
 
     function step(stage){
         hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
         structure.setStructure(stage)
+        setProp("age-label", stage.properties.age)
+        setProp("luminosity-label", stage.properties.luminosity)
+        setProp("temperature-label", stage.properties.temperature)
+        setProp("radius-label", stage.properties.radius)
+        setProp("mass-label", stage.properties.mass)
+        setProp("stage-label", stage.properties.stage)
     }
-
-
 
     let timeout = 100
     for (let i = 0; i < data.length; ++i){
