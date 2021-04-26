@@ -1,0 +1,9 @@
+asgiref
+certifi==2020.12.5
+Django
+numpy==1.20.2
+psycopg2
+pytz
+sqlparse
+torch==1.8.1
+typing-extensions==3.7.4.3
