@@ -95,6 +95,9 @@ def phase_to_str(phase):
     arr = {
         -1: "PMS",
         0: "MS",
+
+        1:"MS",
+
         2: "RGB",
         3: "CHeB",
         4: "EAGB",

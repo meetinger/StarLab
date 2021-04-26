@@ -24,3 +24,14 @@ html, body{
   display: flex;
   width: 100%;
 }
+.checkbox-div{
+  display: flex;
+    justify-content: center;
+  align-content: center;
+  align-items: center;
+  /*padding-top:1rem;*/
+}
+.checkbox-div > div{
+  margin-left: 1rem;
+
+}
