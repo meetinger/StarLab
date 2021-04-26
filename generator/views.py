@@ -31,7 +31,7 @@ def index(request):
             key_index = i
             if mass <= keys[i]:
                 break
-        key = keys[max(key_index-2,0)]
+        key = keys[max(key_index,0)]
         print(key)
         data = convert_table_to_track(tables[key])
         track = data['track']
@@ -45,7 +45,7 @@ def index(request):
 
         jsonchik = json.dumps(converted)
 
-        generated_by = ("Neuronal Network" if (mass in tables) else "Neuronal Network(MIST not found)")
+        generated_by = ("Neuronal Network" if (mass in tables) else "Neuronal Network(MESA MIST file not found)")
 
         return render(request, 'index.html', context={'data': jsonchik, 'curMass': mass, 'generated': generated_by})
 
@@ -67,7 +67,7 @@ def index(request):
 
         # print(jsonchik)
 
-        return render(request, 'index.html', context={'data': jsonchik, 'curMass': mass, 'generated': "MIST"})
+        return render(request, 'index.html', context={'data': jsonchik, 'curMass': mass, 'generated': "MESA MIST"})
     else:
 
         return render(request, 'err.html')
