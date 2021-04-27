@@ -44,7 +44,7 @@
                             </div>
                             <div style="display: flex">
                                 <button>Start!</button>
-                                <div class="checkbox-div"><div>Use the neuronal network(Slow and bad results)</div><input onclick="onCBToggle()" type="checkbox" id="neuronalCB"
+                                <div class="checkbox-div"><div>Use the neuronal network(Slow and bad results)(disabled)</div><input disabled onclick="onCBToggle()" type="checkbox" id="neuronalCB"
                                                                                                                           name="neuronal">
 
                                 </div>
@@ -78,7 +78,7 @@
     inputMass = document.getElementById("input-mass")
 
     neuronalCB = document.getElementById("neuronalCB")
-    
+
 
     function onCBToggle(){
         if(neuronalCB.checked) {
