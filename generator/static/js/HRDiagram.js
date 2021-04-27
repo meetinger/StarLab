@@ -5,12 +5,12 @@ class HRDiagram {
 
     getYByLuminosity(val) {
         return 100 -
-            (50 + Math.log10(val) * 7)
+             (50 + Math.log10(val) * 7.15)
     }
 
 
     getXByTemperature(val) {
-        return 100 - Math.log10(val) * 59.1 + 182.7
+        return 100 - (-175 + Math.log10(val) * 54)
         // return map(val,1500, 500000)
     }
 
