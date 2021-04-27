@@ -23,15 +23,15 @@ def index(request):
 
     # initial_mass = data['initial_params']['initial_mass']
 
-    if isNeuruonal or not (mass in tables):
-        keys = sorted(tables.keys())
-        key_index = 0
+    available_masses = sorted(tables.keys())
 
-        for i in range(0, len(keys)):
+    if isNeuruonal or not (mass in tables):
+        key_index = 0
+        for i in range(0, len(available_masses)):
             key_index = i
-            if mass <= keys[i]:
+            if mass <= available_masses[i]:
                 break
-        key = keys[max(key_index,0)]
+        key = available_masses[max(key_index, 0)]
         print(key)
         data = convert_table_to_track(tables[key])
         track = data['track']
@@ -47,7 +47,9 @@ def index(request):
 
         generated_by = ("Neuronal Network" if (mass in tables) else "Neuronal Network(MESA MIST file not found)")
 
-        return render(request, 'index.html', context={'data': jsonchik, 'curMass': mass, 'generated': generated_by})
+        return render(request, 'index.html',
+                      context={'data': jsonchik, 'curMass': mass, 'masses': available_masses,
+                               'generated': generated_by})
 
 
     elif not (isNeuruonal) and (mass in tables):
@@ -67,7 +69,9 @@ def index(request):
 
         # print(jsonchik)
 
-        return render(request, 'index.html', context={'data': jsonchik, 'curMass': mass, 'generated': "MESA MIST"})
+        return render(request, 'index.html',
+                      context={'data': jsonchik, 'curMass': mass, 'masses': available_masses,
+                               'generated': "MESA MIST"})
     else:
 
         return render(request, 'err.html')

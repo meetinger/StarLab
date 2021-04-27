@@ -39,12 +39,13 @@
                     <div>
                         <form>
                             <div><small>Mass:</small></div>
-                            <div>
+                            <div id="input-mass">
                                 <input name="mass" type="text" value="{{ curMass }}">
                             </div>
                             <div style="display: flex">
                                 <button>Start!</button>
-                                <div class="checkbox-div"><div>Use the neuronal network(Slow and bad results)</div><input type="checkbox" id="neuronal" name="neuronal">
+                                <div class="checkbox-div"><div>Use the neuronal network(Slow and bad results)</div><input onclick="onCBToggle()" type="checkbox" id="neuronalCB"
+                                                                                                                          name="neuronal">
 
                                 </div>
                             </div>
@@ -72,11 +73,34 @@
 
 <script>
 
+    availableMasses = {{ masses|safe }}
+
+    inputMass = document.getElementById("input-mass")
+
+    neuronalCB = document.getElementById("neuronalCB")
+    
+
+    function onCBToggle(){
+        if(neuronalCB.checked) {
+            inputMass.innerHTML = '<input name="mass" type="text" value="{{ curMass }}">';
+        }else{
+            let select = '<select name="mass">'
+            for(let i of availableMasses){
+                if(i==={{ curMass }}){
+                    select+='<option selected value="'+i+'">'+i+'</option>'
+                }else {
+                    select += '<option value="' + i + '">' + i + '</option>'
+                }
+            }
+            select+='</select>'
+            inputMass.innerHTML = select
+        }
+    }
+    onCBToggle()
     data = {{ data|safe }}
 
-        let
     hrdiagram = new HRDiagram("hr-diagram")
-    let structure = new Structure("structure")
+    structure = new Structure("structure")
 
     hrdiagram.genTrack(data)
 
