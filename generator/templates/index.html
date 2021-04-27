@@ -122,7 +122,7 @@
         setProp("stage-label", stage.properties.stage)
     }
 
-    let timeout = 100
+    let timeout = 30
     for (let i = 0; i < data.length; ++i) {
         setTimeout(step, timeout += 100, data[i])
     }
