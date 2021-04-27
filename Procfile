@@ -1,0 +1,1 @@
+web: gunicorn StarLab.wsgi --log-file -
