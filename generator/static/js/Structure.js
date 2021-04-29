@@ -84,7 +84,7 @@ class Structure {
         while (2 * parseInt(radius) / i > 24) {
             i *= 10;
         }
-        console.log("getDivider: ", i)
+        // console.log("getDivider: ", i)
         return i;
     }
 

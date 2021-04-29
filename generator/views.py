@@ -33,7 +33,7 @@ def index(request):
 
         # print(ages)
 
-        converted = convert_to_starlab([ages, mass_remnant_orig, y_orig, x_orig, phase_orig], throttle=3)
+        converted = convert_to_starlab([ages, mass_remnant_orig, y_orig, x_orig, phase_orig], throttle=2)
 
         jsonchik = json.dumps(converted)
 

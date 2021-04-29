@@ -7,7 +7,7 @@ class HRDiagram {
 
     getYByLuminosity(val) {
         return 100 -
-            (50 + Math.log10(val) * 7.15)
+             (50 + Math.log10(val) * 7.15)
     }
 
 
