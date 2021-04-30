@@ -55,12 +55,22 @@
                             <div>Controls:</div>
                             <button onclick="toggle()" id="start-stop-btn">Start</button>
                             <div class="rewind">
+                                Rewind:
                                 <div>
                                     <button onclick="rewind(-10)">-10</button>
                                     <button onclick="rewind(-1)">-1</button>
                                     <button onclick="rewind(+1)">+1</button>
                                     <button onclick="rewind(+10)">+10</button>
                                 </div>
+                            </div>
+
+                            <div class="speed">
+                                Speed:
+                                <div>
+                                    <button onclick="changeSpeed(0.5)">0.5</button>
+                                    <button onclick="changeSpeed(2)">2</button>
+                                </div>
+                                Current Speed: <span id="fps"></span>FPS
                             </div>
                         </div>
                     </div>
@@ -87,7 +97,7 @@
 
     availableMasses = {{ masses|safe }}
 
-        inputMass = document.getElementById("input-mass")
+    inputMass = document.getElementById("input-mass")
 
     neuronalCB = document.getElementById("neuronalCB")
 
@@ -193,6 +203,14 @@
         --index;
     }
 
+    function changeSpeed(divider){
+        toggle();
+        timeoutInc/=divider;
+        toggle();
+        document.getElementById("fps").innerHTML=1000/timeoutInc+""
+    }
+
+    changeSpeed(1)
     step(data[0]);
 </script>
 </html>
