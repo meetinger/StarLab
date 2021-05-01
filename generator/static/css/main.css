@@ -26,12 +26,20 @@ html, body{
 }
 .checkbox-div{
   display: flex;
-    justify-content: center;
+    justify-content: space-between;
   align-content: center;
   align-items: center;
   /*padding-top:1rem;*/
 }
-.checkbox-div > div{
-  margin-left: 1rem;
-
+.btn{
+  border: none;
+    outline: none;
+    background-color: #00ccff;
+  color: white;
+  border-radius: 0.125rem;
+  /*margin: 0.25rem;*/
+}
+.play-settings{
+  display: flex;
+  justify-content: space-between;
 }
