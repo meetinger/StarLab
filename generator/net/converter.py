@@ -1,8 +1,7 @@
-import json
 import os
 import random
+from generator.net.scale_age import scale_age
 import math
-
 
 def clean_split(str, delimiter, ex_chars=None):
     if ex_chars is None:
@@ -95,9 +94,6 @@ def phase_to_str(phase):
     arr = {
         -1: "PMS",
         0: "MS",
-
-        1:"MS",
-
         2: "RGB",
         3: "CHeB",
         4: "EAGB",
@@ -109,19 +105,16 @@ def phase_to_str(phase):
 
         9: "WR",
     }
-    return arr.get(round(phase), phase)
+    return arr.get(round(phase), "Error")
 
 
-def scale_age(x):
-    # val = x / 2952141953419
-    # val = ((x*(x+1000000000)*(x-2952141953419))/2952141953419**3)*1000000
-    val = math.log10(x) / 2
-    return val
+# a = 0
+# b = 30e+9
+# eps = 1e+9
+# x = [a, 12e+9, b]
+# y = [0, 500, 1000]
 
 
-def unscale_age(x1):
-    val = (10 ** (x1 * 2))
-    return val
 
 
 def min_max_scale(x, xmin, xmax, a, b):
@@ -162,33 +155,35 @@ def unscale_output(data):
 
 def scale_input(data):
     mass = scale(data[0], 0, 120)
-    age = scale_age(data[1])
+    # age = scale_age(data[1])
+    age = scale(scale_age(data[1]), 0, scale_age_factor)
+    # age = scale(data[1], 0, 2952141953419)
     res = (mass, age)
     return res
 
 
 def unscale_input(data):
     mass = unscale(data[0], 0, 120)
-    age = unscale_age(data[1])
+    # age = unscale_age(data[1])
+    age = unscale_age(unscale(data[1], 0, scale_age_factor))
+    # age = unscale(data[1], 0, 2952141953419)
     res = (mass, age)
     return res
 
 
 # disable datascaling
-def create_dataset(data, dataset_obj=True, datascaling=False):
+def create_dataset(data, datascaling=False):
     initial_params = data['initial_params']
     track = data['track']
 
     # x = [(initial_params['initial_mass'], math.log10(i['star_age'])/2) for i in track]
     # x = [(initial_params['initial_mass'], i['star_age']) for i in track]
-
+    last_age = track[-1]['star_age']
     if datascaling:
-        x = [scale_input((initial_params['initial_mass'], scale_age(i['star_age']))) for i in track]
-
+        x = [scale_input((initial_params['initial_mass'], scale_age(i['star_age'], last_age))) for i in track]
         y = [scale_output(tuple(i.values())[1::]) for i in track]
-
     else:
-        x = [(initial_params['initial_mass'], scale_age(i['star_age'])) for i in track]
+        x = [(initial_params['initial_mass'], scale_age(i['star_age'], last_age)) for i in track]
         y = [tuple(i.values())[1::] for i in track]
     # if(dataset_obj):
     #     tensor_x = torch.Tensor(x)
@@ -254,7 +249,7 @@ def split_dataset_dict(data, amount=0.8):
         return (x_train, y_train, x_test, y_test)
 
 
-def create_big_dataset(path):
+def create_big_dataset(path, datascaling=False):
     files = os.listdir(path)
     # tracks = [convert_table_to_track(dir+'/'+i) for i in files]
     tracks = []

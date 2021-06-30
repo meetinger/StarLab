@@ -38,10 +38,10 @@ def index(request):
         ages = get_column_from_table_dict(track, 'star_age')
 
         net = Net()
-        net.load_state_dict(torch.load('generator/net/model.pt'))
+        net.load_state_dict(torch.load('generator/net/model.pt', map_location=torch.device('cpu')))
         ages, mass_remnant, log_L, log_Teff, phase = gen_track(model=net, age=ages, initial_mass=mass)
 
-        converted = convert_to_starlab([ages[::3], mass_remnant, log_L, log_Teff, phase], throttle=1)
+        converted = convert_to_starlab([ages[::1], mass_remnant, log_L, log_Teff, phase], throttle=1)
 
         jsonchik = json.dumps(converted)
 

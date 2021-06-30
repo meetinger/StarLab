@@ -27,8 +27,8 @@ def gen_track(model, age=11465471475, initial_mass=1, device=torch.device("cpu")
 
         # data = torch.Tensor(scale_input([mass, ages[i]])).to(device)
         # output = unscale_output(model(data).tolist())
-
-        data = torch.Tensor([initial_mass, scale_age(ages[i])]).to(device)
+        # print()
+        data = torch.Tensor([initial_mass, scale_age(ages[i], ages[len(ages)-1])]).to(device)
         output = model(data).tolist()
 
         m = output[0]
