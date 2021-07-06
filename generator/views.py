@@ -15,6 +15,8 @@ def index(request):
         mass = 1.0
     mass = float(mass)
 
+    mass = min(mass, 120)
+
     # start_time = time.time()
     # print("--- %s seconds ---" % (time.time() - start_time))
 
