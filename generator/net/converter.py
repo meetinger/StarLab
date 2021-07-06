@@ -328,6 +328,7 @@ def load_files(path):
 
     files = os.listdir(path)
     for i in files:
+        # print("LOADING FILES: ", i)
         mass = float(read_table(path+'/'+i, header_line=6, delimiter=" ", header_params=['initial_mass'], max_line=8)[0]['initial_mass'])
         tables[mass] = path+'/'+i
 
