@@ -7,7 +7,7 @@ from django.shortcuts import render
 from generator.net.converter import convert_table_to_track, get_column_from_table_dict, convert_to_starlab, load_files
 from generator.net.gentrack import gen_track_by_interpolator
 
-tables = load_files('generator/datasets/tracks/')
+tables = load_files('generator/datasets/tracks/', use_file_names=True)
 
 def index(request):
     mass = request.GET.get('mass')

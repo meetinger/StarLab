@@ -106,9 +106,25 @@
 
     hrdiagram.genTrack(data)
 
+    function beautifyNumber(num, toFixed=0){
+        let str = Math.trunc(num)+""
+        let res = ""
+        for(let i = 0; i < str.length;++i){
+            res += str[i]
+            if((i + (3 - str.length % 3) + 1) % 3 === 0){
+                res+=" "
+            }
+        }
+
+        let frac = (num.toFixed(toFixed)%1).toFixed(toFixed)
+        res = res.trim() + (frac+"").substring(1)
+
+        return res
+    }
+
     function setProp(label, value) {
-        labels = document.getElementsByClassName(label)
-        for (i of labels) {
+        let labels = document.getElementsByClassName(label)
+        for (let i of labels) {
             i.innerHTML = value
         }
     }
@@ -119,7 +135,9 @@
         ++index;
         hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
         structure.setStructure(stage)
-        setProp("age-label", stage.properties.age.toFixed(2))
+        {#setProp("age-label", stage.properties.age.toFixed(2))#}
+        {#setProp("age-label", (stage.properties.age/1000000).toFixed(2)+" Myrs")#}
+        setProp("age-label", beautifyNumber(stage.properties.age/1000000, 2)+" Myrs")
         setProp("luminosity-label", stage.properties.luminosity.toFixed(3))
         setProp("temperature-label", stage.properties.temperature.toFixed(2))
         setProp("radius-label", stage.properties.radius.toFixed(2))

@@ -323,13 +323,16 @@ def write_data_for_starlab(converted):
 
     f.write("let data = " + json_obj)
 
-def load_files(path):
-    tables = {}
 
+def load_files(path, use_file_names = False):
+    tables = {}
     files = os.listdir(path)
-    for i in files:
-        # print("LOADING FILES: ", i)
-        mass = float(read_table(path+'/'+i, header_line=6, delimiter=" ", header_params=['initial_mass'], max_line=8)[0]['initial_mass'])
-        tables[mass] = path+'/'+i
+    if use_file_names:
+        tables = {float(''.join(filter(str.isdigit, filename)))/10000: path+'/'+filename for filename in files}
+    else:
+        for i in files:
+            # print("LOADING FILES: ", i)
+            mass = float(read_table(path+'/'+i, header_line=6, delimiter=" ", header_params=['initial_mass'], max_line=8)[0]['initial_mass'])
+            tables[mass] = path+'/'+i
 
     return dict(sorted(tables.items()))
