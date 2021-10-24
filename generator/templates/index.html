@@ -137,7 +137,7 @@
         structure.setStructure(stage)
         {#setProp("age-label", stage.properties.age.toFixed(2))#}
         {#setProp("age-label", (stage.properties.age/1000000).toFixed(2)+" Myrs")#}
-        setProp("age-label", beautifyNumber(stage.properties.age/1000000, 2)+" Myrs")
+        setProp("age-label", beautifyNumber(stage.properties.age, 2))
         setProp("luminosity-label", stage.properties.luminosity.toFixed(3))
         setProp("temperature-label", stage.properties.temperature.toFixed(2))
         setProp("radius-label", stage.properties.radius.toFixed(2))
