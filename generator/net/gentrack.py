@@ -65,6 +65,7 @@ def interpolate(path, mass, paths = None):
     for i in range(1, len(masses)):
         if masses[i - 1] <= mass <= masses[i]:
             mass_a, mass_b = masses[i - 1], masses[i]
+            # break
 
     # if mass_a == mass:
     #     mass_a = masses[masses.index(mass_a) - 1]

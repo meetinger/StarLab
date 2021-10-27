@@ -19,6 +19,7 @@ class HRDiagram {
     genTrack(arr) {
         this.obj.innerHTML = '<div class="hr-point" id="hr-point"></div>'
         // let divs = []
+        let trackPoints = ""
         for (let i = 0; i < arr.length; ++i) {
             //TODO add interpolation
 
@@ -33,9 +34,9 @@ class HRDiagram {
 
             styleStr = styleStr.replaceAll("\"", "")
             styleStr = styleStr.replaceAll(",", ";")
-
-            this.obj.innerHTML += "<div class='track' style='"+styleStr+"'></div>";
+            trackPoints+="<div class='track' style='"+styleStr+"'></div>";
         }
+        this.obj.innerHTML += trackPoints
     }
 
     setPoint(L, T){

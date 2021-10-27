@@ -299,7 +299,8 @@ def convert_to_starlab(data, throttle = 1):
             mass_remnant = data[1][i]
             L0 = 10**data[2][i]
             T = 10**data[3][i]
-            stage = phase_to_str(data[4][i])
+            stage = data[4][i]
+            # stage = phase_to_str(data[4][i])
 
             converted.append({
                 'structure': False,
