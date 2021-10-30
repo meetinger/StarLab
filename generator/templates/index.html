@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/hrdiagram.css' %}">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <link rel="stylesheet" href="{% static 'css/structure.css' %}">
+    <link rel="stylesheet" href="{% static 'css/clock.css' %}">
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.ico' %}"/>
 </head>
 <body>
@@ -71,10 +72,12 @@
                                     <button onclick="changeSpeed(2)">2</button>
                                 </div>
                                 Current Speed: <span id="fps"></span>FPS
-{#                                <label>#}
-{#                                    Enable equal timeframe#}
-{#                                    <input type="checkbox" onclick="">#}
-{#                                </label>#}
+{#                                <div>#}
+{#                                    <label>#}
+{#                                        Enable equal timeframe#}
+{#                                        <input type="checkbox" onclick="">#}
+{#                                    </label>#}
+{#                                </div>#}
                             </div>
                         </div>
                     </div>
@@ -86,6 +89,8 @@
                     <div><b>Radius: </b><span class="radius-label"></span></div>
                     <div><b>Mass: </b><span class="mass-label"></span></div>
                     <div><b>Stage: </b><span class="stage-label"></span></div>
+                    <div id="clock" class="clock">
+                    </div>
                 </div>
             </div>
         </div>
@@ -96,36 +101,76 @@
 {#<script src="{% static 'js/db.js' %}"></script>#}
 <script src="{% static 'js/HRDiagram.js' %}"></script>
 <script src="{% static 'js/Structure.js' %}"></script>
+<script src="{% static 'js/Clock.js' %}"></script>
 
 <script>
 
-    availableMasses = {{ masses|safe }}
+    let availableMasses = {{ masses|safe }};
 
-    inputMass = document.getElementById("input-mass")
+    let inputMass = document.getElementById("input-mass");
 
-    const inputData = {{ data|safe }}
+    const inputData = {{ data|safe }};
 
-    hrdiagram = new HRDiagram("hr-diagram")
-    structure = new Structure("structure")
+    let hrdiagram = new HRDiagram("hr-diagram");
+    let structure = new Structure("structure");
 
-    let evenedData = []
+    let evenedData = [];
 
     {#evenData()#}
     {#let data = evenedData#}
 
-    let data = inputData
+    let data = inputData;
 
-    hrdiagram.genTrack(data)
+    hrdiagram.genTrack(data);
+
+    let clockData = []
+
+    let clock = new Clock("clock")
+
+    analyzeData()
+
+    clock.build(clockData)
+
+    function analyzeData(){
+        let stageCounter = -1;
+        function checkStageInClockData(stage){
+            let flag = false;
+            for(let i of clockData){
+                if(i.stage===stage){
+                    flag = true;
+                    break
+                }
+            }
+            return flag
+        }
+        for (let i = 1; i < data.length;++i){
+            if(checkStageInClockData(data[i-1].properties.stage)){
+                if(data[i-1].properties.stage!==data[i].properties.stage || i === data.length-1){
+                    clockData[stageCounter].end = data[i-1].properties.age
+                }
+            }else{
+                clockData.push({
+                    stage: data[i-1].properties.stage,
+                    start: data[i-1].properties.age,
+                    end: undefined
+                })
+                ++stageCounter
+            }
+        }
+    }
+
+
 
     function evenData(){
+        // TODO
         evenedData = []
-        let sumAgesGaps = 0
+        {#let sumAgesGaps = 0#}
+        {##}
+        {#for(let i = 1; i < inputData.length;++i){#}
+        {#    sumAgesGaps += (inputData[i].properties.age - inputData[i-1].properties.age)#}
+        {# }#}
 
-        for(let i = 1; i < inputData.length;++i){
-            sumAgesGaps += (inputData[i].properties.age - inputData[i-1].properties.age)
-        }
-
-        let averageAgeGap = sumAgesGaps/inputData.length
+        let averageAgeGap = inputData[inputData.length-1].properties.age/inputData.length
 
         {#console.log(averageAgeGap)#}
 
@@ -142,7 +187,7 @@
         function findLeftBound(startIndex, age){
             let i = startIndex
             while(i >= 0){
-                if(inputData[i].properties.age<age){
+                if(inputData[i].properties.age<=age){
                     {#console.log("L Props Age: "+inputData[i].properties.age)#}
                     {#console.log("L Age: "+age)#}
                     {#console.log("L Delta: "+(age-inputData[i].properties.age))#}
@@ -151,40 +196,43 @@
                 }
                 --i;
             }
+            return i+1
         }
 
         function findRightBound(startIndex, age){
             let i = startIndex
             while(i < inputData.length){
-                if(inputData[i].properties.age>age){
+                if(inputData[i].properties.age>=age){
                     {#console.log("R Props Age: "+inputData[i].properties.age)#}
                     {#console.log("R Age: "+age)#}
                     {#console.log("R Delta: "+(age-inputData[i].properties.age))#}
 
-                    return i
+                   return i
                 }
                 ++i;
             }
             {#console.log(i)#}
-
+            return i-1
         }
 
         for(let i = 1; i < inputData.length; ++i){
             let curAge = i*averageAgeGap
-            let leftBoundAge = findLeftBound(i, curAge)
+            let leftBoundIndex = findLeftBound(i, curAge)
+            let leftBoundAge = inputData[leftBoundIndex].properties.age
             let rightBoundIndex = findRightBound(i, curAge)
             let rightBoundAge = inputData[rightBoundIndex].properties.age
-            {#console.log("INDEX LEFT: "+i)#}
-            {#console.log("INDEX RIGHT: "+rightBoundIndex)#}
+            console.log("INDEX LEFT: " + leftBoundIndex)
+            console.log("INDEX MID: " + i)
+            console.log("INDEX RIGHT: " + rightBoundIndex)
             evenedData.push({
                 structure: false,
                 properties: {
-                    luminosity: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[i].properties.luminosity, inputData[rightBoundIndex].properties.luminosity),
-                    temperature: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[i].properties.temperature, inputData[rightBoundIndex].properties.temperature),
-                    stage: Math.trunc(linearScale(curAge, leftBoundAge, rightBoundAge, inputData[i].properties.stage, inputData[rightBoundIndex].properties.stage)),
+                    luminosity: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.luminosity, inputData[rightBoundIndex].properties.luminosity),
+                    temperature: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.temperature, inputData[rightBoundIndex].properties.temperature),
+                    stage: Math.round(linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.stage, inputData[rightBoundIndex].properties.stage)),
                     age: curAge,
-                    radius: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[i].properties.radius, inputData[rightBoundIndex].properties.radius),
-                    mass: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[i].properties.mass, inputData[rightBoundIndex].properties.mass),
+                    radius: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.radius, inputData[rightBoundIndex].properties.radius),
+                    mass: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.mass, inputData[rightBoundIndex].properties.mass),
 
                 }
             })
@@ -216,7 +264,7 @@
     }
 
     function phaseToStr(phase) {
-        let arr = {
+        const arr = {
         "-1": "PMS",
         0: "MS",
 
@@ -250,7 +298,7 @@
         setProp("radius-label", stage.properties.radius.toFixed(2))
         setProp("mass-label", stage.properties.mass.toFixed(2))
         setProp("stage-label", phaseToStr(stage.properties.stage))
-
+        clock.setPointer(stage.properties.age)
         if (index >= data.length - 1) {
             togglePlay()
         }

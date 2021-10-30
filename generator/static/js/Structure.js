@@ -59,8 +59,8 @@ class Structure {
                 width: (parseFloat(i.size) / this.divider) + "rem",
                 height: (parseFloat(i.size) / this.divider) + "rem",
             }
-            console.log("DIVIDER:", this.divider)
-            console.log("WIDTH:", shellStyle.width)
+            // console.log("DIVIDER:", this.divider)
+            // console.log("WIDTH:", shellStyle.width)
             if (index === 0) {
                 shellStyle.backgroundColor = "rgb(" + this.colorTemperatureToRGB(this.state.stage.properties.temperature) + ")"
             }
