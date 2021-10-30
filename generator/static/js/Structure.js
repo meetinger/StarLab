@@ -1,5 +1,5 @@
 class Structure {
-    constructor(id) {
+    constructor(id, starlab) {
         this.obj = document.getElementById(id)
         this.divider = 1
         this.radius = 10

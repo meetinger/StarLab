@@ -25,7 +25,6 @@
                     <div><b>Stage: </b><span class="stage-label"></span></div>
                 </div>
                 <div class="hr-diagram" id="hr-diagram">
-                    <div class="hr-point" id="hr-point"></div>
                 </div>
                 <div class="hr-footer"></div>
             </div>
@@ -53,23 +52,23 @@
                             <div>
                                 Controls:
                                 <div>
-                                    <button onclick="togglePlay()" id="start-stop-btn">Start</button>
+                                    <button onclick="starlab.togglePlay()" id="start-stop-btn">Start</button>
                                 </div>
                                 <div class="rewind">
                                     Rewind:
                                     <div>
-                                        <button onclick="rewind(-10)">-10</button>
-                                        <button onclick="rewind(-1)">-1</button>
-                                        <button onclick="rewind(+1)">+1</button>
-                                        <button onclick="rewind(+10)">+10</button>
+                                        <button onclick="starlab.rewind(-10)">-10</button>
+                                        <button onclick="starlab.rewind(-1)">-1</button>
+                                        <button onclick="starlab.rewind(+1)">+1</button>
+                                        <button onclick="starlab.rewind(+10)">+10</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="speed">
                                 Speed:
                                 <div>
-                                    <button onclick="changeSpeed(0.5)">0.5</button>
-                                    <button onclick="changeSpeed(2)">2</button>
+                                    <button onclick="starlab.changeSpeed(0.5)">0.5</button>
+                                    <button onclick="starlab.changeSpeed(2)">2</button>
                                 </div>
                                 Current Speed: <span id="fps"></span>FPS
 {#                                <div>#}
@@ -99,274 +98,19 @@
 </body>
 {% load static %}
 {#<script src="{% static 'js/db.js' %}"></script>#}
+<script src="{% static 'js/StarLab.js' %}"></script>
 <script src="{% static 'js/HRDiagram.js' %}"></script>
 <script src="{% static 'js/Structure.js' %}"></script>
 <script src="{% static 'js/Clock.js' %}"></script>
 
 <script>
 
-    let availableMasses = {{ masses|safe }};
+    const inputData = {{ data | safe }};
 
-    let inputMass = document.getElementById("input-mass");
-
-    const inputData = {{ data|safe }};
-
-    let hrdiagram = new HRDiagram("hr-diagram");
-    let structure = new Structure("structure");
-
-    let evenedData = [];
-
-    {#evenData()#}
-    {#let data = evenedData#}
-
-    let data = inputData;
-
-    hrdiagram.genTrack(data);
-
-    let clockData = []
-
-    let clock = new Clock("clock")
-
-    analyzeData()
-
-    clock.build(clockData)
-
-    function analyzeData(){
-        let stageCounter = -1;
-        function checkStageInClockData(stage){
-            let flag = false;
-            for(let i of clockData){
-                if(i.stage===stage){
-                    flag = true;
-                    break
-                }
-            }
-            return flag
-        }
-        for (let i = 1; i < data.length;++i){
-            if(checkStageInClockData(data[i-1].properties.stage)){
-                if(data[i-1].properties.stage!==data[i].properties.stage || i === data.length-1){
-                    clockData[stageCounter].end = data[i-1].properties.age
-                }
-            }else{
-                clockData.push({
-                    stage: data[i-1].properties.stage,
-                    start: data[i-1].properties.age,
-                    end: undefined
-                })
-                ++stageCounter
-            }
-        }
-    }
+    let starlab = new StarLab("clock", "hr-diagram", "structure", inputData)
 
 
-
-    function evenData(){
-        // TODO
-        evenedData = []
-        {#let sumAgesGaps = 0#}
-        {##}
-        {#for(let i = 1; i < inputData.length;++i){#}
-        {#    sumAgesGaps += (inputData[i].properties.age - inputData[i-1].properties.age)#}
-        {# }#}
-
-        let averageAgeGap = inputData[inputData.length-1].properties.age/inputData.length
-
-        {#console.log(averageAgeGap)#}
-
-        function linearScale(x, x1, x2, y1, y2){
-            {#console.log(x)#}
-            {#console.log(x1)#}
-            {#console.log(x2)#}
-            {#console.log(y1)#}
-            {#console.log(y2)#}
-            {#console.log("x2-x1 = "+(x2-x1))#}
-            return y1+(x-x1)*(y2-y1)/(x2-x1)
-        }
-
-        function findLeftBound(startIndex, age){
-            let i = startIndex
-            while(i >= 0){
-                if(inputData[i].properties.age<=age){
-                    {#console.log("L Props Age: "+inputData[i].properties.age)#}
-                    {#console.log("L Age: "+age)#}
-                    {#console.log("L Delta: "+(age-inputData[i].properties.age))#}
-
-                    return i
-                }
-                --i;
-            }
-            return i+1
-        }
-
-        function findRightBound(startIndex, age){
-            let i = startIndex
-            while(i < inputData.length){
-                if(inputData[i].properties.age>=age){
-                    {#console.log("R Props Age: "+inputData[i].properties.age)#}
-                    {#console.log("R Age: "+age)#}
-                    {#console.log("R Delta: "+(age-inputData[i].properties.age))#}
-
-                   return i
-                }
-                ++i;
-            }
-            {#console.log(i)#}
-            return i-1
-        }
-
-        for(let i = 1; i < inputData.length; ++i){
-            let curAge = i*averageAgeGap
-            let leftBoundIndex = findLeftBound(i, curAge)
-            let leftBoundAge = inputData[leftBoundIndex].properties.age
-            let rightBoundIndex = findRightBound(i, curAge)
-            let rightBoundAge = inputData[rightBoundIndex].properties.age
-            console.log("INDEX LEFT: " + leftBoundIndex)
-            console.log("INDEX MID: " + i)
-            console.log("INDEX RIGHT: " + rightBoundIndex)
-            evenedData.push({
-                structure: false,
-                properties: {
-                    luminosity: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.luminosity, inputData[rightBoundIndex].properties.luminosity),
-                    temperature: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.temperature, inputData[rightBoundIndex].properties.temperature),
-                    stage: Math.round(linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.stage, inputData[rightBoundIndex].properties.stage)),
-                    age: curAge,
-                    radius: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.radius, inputData[rightBoundIndex].properties.radius),
-                    mass: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.mass, inputData[rightBoundIndex].properties.mass),
-
-                }
-            })
-            i = rightBoundIndex
-        }
-    }
-
-    function beautifyNumber(num, toFixed=0){
-        let str = Math.trunc(num)+""
-        let res = ""
-        for(let i = 0; i < str.length;++i){
-            res += str[i]
-            if((i + (3 - str.length % 3) + 1) % 3 === 0){
-                res+=" "
-            }
-        }
-
-        let frac = (num.toFixed(toFixed)%1).toFixed(toFixed)
-        res = res.trim() + (frac+"").substring(1)
-
-        return res
-    }
-
-    function setProp(label, value) {
-        let labels = document.getElementsByClassName(label)
-        for (let i of labels) {
-            i.innerHTML = value
-        }
-    }
-
-    function phaseToStr(phase) {
-        const arr = {
-        "-1": "PMS",
-        0: "MS",
-
-        1:"MS",
-
-        2: "RGB",
-        3: "CHeB",
-        4: "EAGB",
-        5: "TPAGB",
-        6: "PAGB",
-
-        7: "PAGB",
-        8: "WR",
-
-        9: "WR",
-        }
-        return arr[Math.round(phase)]
-    }
-
-    let index = 0
-
-    function step(stage) {
-        ++index;
-        hrdiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
-        structure.setStructure(stage)
-        {#setProp("age-label", stage.properties.age.toFixed(2))#}
-        {#setProp("age-label", (stage.properties.age/1000000).toFixed(2)+" Myrs")#}
-        setProp("age-label", beautifyNumber(stage.properties.age, 2))
-        setProp("luminosity-label", stage.properties.luminosity.toFixed(3))
-        setProp("temperature-label", stage.properties.temperature.toFixed(2))
-        setProp("radius-label", stage.properties.radius.toFixed(2))
-        setProp("mass-label", stage.properties.mass.toFixed(2))
-        setProp("stage-label", phaseToStr(stage.properties.stage))
-        clock.setPointer(stage.properties.age)
-        if (index >= data.length - 1) {
-            togglePlay()
-        }
-    }
-
-
-    let timeoutsIDs = []
-    let timeout = 100
-    let timeoutInc = 12.5
-
-
-    function start() {
-        timeout = 0
-        if (index >= data.length - 1) {
-            index = 0
-        }
-        for (let i = index; i < data.length; ++i) {
-            timeoutsIDs.push(setTimeout(step, timeout += timeoutInc, data[i]))
-        }
-    }
-
-    let isStarted = false;
-
-    function togglePlay() {
-        let btn = document.getElementById("start-stop-btn")
-        if (isStarted) {
-            stop()
-            btn.innerHTML = "Start"
-        } else {
-            start()
-            btn.innerHTML = "Stop"
-        }
-        isStarted = !isStarted;
-    }
-
-    function toggleEqualDataFrame(){
-
-    }
-
-    function stop() {
-        for (let i of timeoutsIDs) {
-            clearTimeout(i)
-        }
-        timeoutsIDs = []
-    }
-
-    function rewind(count) {
-        togglePlay()
-        if (index + count > (data.length - 1)) {
-            index = data.length - 1
-        } else if (index + count < 0) {
-            index = 0
-        } else {
-            index = index + count;
-        }
-        togglePlay()
-        step(data[index])
-        --index;
-    }
-
-    function changeSpeed(divider) {
-        togglePlay();
-        timeoutInc /= divider;
-        togglePlay();
-        document.getElementById("fps").innerHTML = 1000 / timeoutInc + ""
-    }
-
-    changeSpeed(1)
-    step(data[0]);
+    starlab.changeSpeed(1)
+    starlab.step(inputData[0]);
 </script>
 </html>

@@ -1,32 +1,13 @@
 class Clock{
     data = []
-    constructor(id) {
+    starlab
+    constructor(id, starlab) {
         this.obj = document.getElementById(id)
         this.obj.innerHTML = '<div class="clock-body"></div>' +
             '<div class="clock-pointer-wrapper"><div class="clock-pointer"></div></div>' +
             '<div class="clock-stages"></div>'
+        this.starlab = starlab
     }
-    phaseToStr(phase) {
-        const arr = {
-        "-1": "PMS",
-        0: "MS",
-
-        1:"MS",
-
-        2: "RGB",
-        3: "CHeB",
-        4: "EAGB",
-        5: "TPAGB",
-        6: "PAGB",
-
-        7: "PAGB",
-        8: "WR",
-
-        9: "WR",
-        }
-        return arr[Math.round(phase)]
-    }
-
     build(data){
         this.data = data
         const colors = [
@@ -59,9 +40,11 @@ class Clock{
             stageRow.appendChild(stageColorPointer)
 
             let stageLabel = document.createElement("div")
-            stageLabel.innerHTML = phaseToStr(data[i].stage)
+            stageLabel.innerHTML = this.starlab.phaseToStr(data[i].stage)
 
             stageRow.appendChild(stageLabel)
+            stageRow.onclick = ()=>{this.starlab.rewindByAge(data[i].start)}
+
 
             clockStages.appendChild(stageRow)
 

@@ -1,6 +1,7 @@
 class HRDiagram {
-    constructor(id) {
+    constructor(id, starlab) {
         this.obj = document.getElementById(id)
+        this.obj.innerHTML = '<div class="hr-point" id="hr-point"></div>'
     }
 
 
