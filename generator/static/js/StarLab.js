@@ -18,7 +18,14 @@ class StarLab{
 
     constructor(clockID, HRDiagramID, structureID, inputData) {
         this.inputData = inputData
+
+        // this.evenData()
+
+
         this.data = this.inputData
+        // this.data = this.evenedData
+
+
         this.index = 0
         this.timeoutsIDs = []
         this.timeout = 100
@@ -192,29 +199,24 @@ class StarLab{
         // TODO
         this.evenedData = []
 
-        let averageAgeGap = inputData[inputData.length-1].properties.age/inputData.length
+        const terminalAge = this.inputData[this.inputData.length-1].properties.age
 
+        let averageAgeGap = terminalAge/this.inputData.length/20
+
+        // console.log("AVG: "+averageAgeGap)
 
         function linearScale(x, x1, x2, y1, y2){
             return y1+(x-x1)*(y2-y1)/(x2-x1)
         }
 
-        function findLeftBound(startIndex, age){
-            let i = startIndex
-            while(i >= 0){
-                if(inputData[i].properties.age<=age){
-                    return i
-                }
-                --i;
-            }
-            return i+1
+        function linearScaleByK(Xmin, Xmax, k){
+            return (Xmax - Xmin) * k + Xmin
         }
 
-    function findRightBound(startIndex, age){
+        const findLeftBound = (startIndex, age) => {
             let i = startIndex
-            while(i < inputData.length){
-                if(inputData[i].properties.age>=age){
-
+            while(i < this.inputData.length){
+                if(this.inputData[i].properties.age >= age){
                    return i
                 }
                 ++i;
@@ -222,28 +224,41 @@ class StarLab{
             return i-1
         }
 
-        for(let i = 1; i < inputData.length; ++i){
-            let curAge = i*averageAgeGap
-            let leftBoundIndex = findLeftBound(i, curAge)
-            let leftBoundAge = inputData[leftBoundIndex].properties.age
-            let rightBoundIndex = findRightBound(i, curAge)
-            let rightBoundAge = inputData[rightBoundIndex].properties.age
-            console.log("INDEX LEFT: " + leftBoundIndex)
-            console.log("INDEX MID: " + i)
-            console.log("INDEX RIGHT: " + rightBoundIndex)
-            evenedData.push({
+        let hintIndex = 0
+        for(let i = 0; i < terminalAge; i+=averageAgeGap){
+
+            // let leftBoundIndex = findLeftBound(i, curAge)
+            let leftBoundIndex = findLeftBound(hintIndex, i)
+            // console.log(leftBoundIndex)
+            let leftBoundAge = this.inputData[leftBoundIndex].properties.age
+
+            // let rightBoundIndex = findRightBound(i, curAge)
+            let rightBoundIndex = Math.min(leftBoundIndex+1, this.inputData.length-1)
+            let rightBoundAge = this.inputData[rightBoundIndex].properties.age
+
+            hintIndex=leftBoundIndex
+
+            // console.log("INDEX LEFT: " + leftBoundAge)
+            // console.log("INDEX MID: " + i)
+            // console.log("INDEX RIGHT: " + rightBoundAge)
+
+            let deltaAgeA = rightBoundAge-i
+            let deltaAgeA_B = rightBoundAge-leftBoundAge
+
+            let k = deltaAgeA_B/deltaAgeA
+
+
+            this.evenedData.push({
                 structure: false,
                 properties: {
-                    luminosity: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.luminosity, inputData[rightBoundIndex].properties.luminosity),
-                    temperature: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.temperature, inputData[rightBoundIndex].properties.temperature),
-                    stage: Math.round(linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.stage, inputData[rightBoundIndex].properties.stage)),
-                    age: curAge,
-                    radius: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.radius, inputData[rightBoundIndex].properties.radius),
-                    mass: linearScale(curAge, leftBoundAge, rightBoundAge, inputData[leftBoundIndex].properties.mass, inputData[rightBoundIndex].properties.mass),
-
+                    luminosity: linearScaleByK(this.inputData[leftBoundIndex].properties.luminosity, this.inputData[rightBoundIndex].properties.luminosity, k),
+                    temperature: linearScaleByK(this.inputData[leftBoundIndex].properties.temperature, this.inputData[rightBoundIndex].properties.temperature, k),
+                    stage: this.inputData[leftBoundIndex].properties.stage,
+                    age: i,
+                    radius: linearScaleByK(this.inputData[leftBoundIndex].properties.radius, this.inputData[rightBoundIndex].properties.radius, k),
+                    mass: linearScaleByK(this.inputData[leftBoundIndex].properties.mass, this.inputData[rightBoundIndex].properties.mass, k),
                 }
             })
-            i = rightBoundIndex
         }
     }
 
