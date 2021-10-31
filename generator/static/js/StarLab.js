@@ -33,7 +33,7 @@ class StarLab{
         // this.data = this.evenedData
 
 
-        console.log(this.data)
+        // console.log(this.data)
         this.index = 0
         this.timeoutsIDs = []
         this.timeout = 100
@@ -173,12 +173,12 @@ class StarLab{
         let curAge = this.data[this.index].properties.age
         this.togglePlay()
         if (this.isEqualTimeFrameEnabled) {
-            console.log("ENABLED")
+            // console.log("ENABLED")
             this.analyzeData()
             this.evenData()
             this.data = this.evenedData
         } else {
-            console.log("DISABLED")
+            // console.log("DISABLED")
             this.data = this.inputData
             this.analyzeData()
         }
