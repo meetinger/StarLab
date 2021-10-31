@@ -19,13 +19,15 @@ class Clock{
             [0, 0, 255],
             [139, 0, 255]
         ]
-        const terminalAge = data[data.length-1].end
+        const terminalAge = data[data.length-1].endAge
         let colorIndex = 0
         let clockBody = this.obj.getElementsByClassName("clock-body")[0]
         let clockStages = this.obj.getElementsByClassName("clock-stages")[0]
+        clockBody.innerHTML = ""
+        clockStages.innerHTML = ""
         for(let i in data){
             let block = document.createElement("div")
-            let width = (data[i].end - data[i].start)*100/terminalAge
+            let width = (data[i].endAge - data[i].startAge)*100/terminalAge
             block.style.width = width+"%"
             block.style.backgroundColor = "rgb("+colors[colorIndex]+")"
             clockBody.appendChild(block)
@@ -43,7 +45,7 @@ class Clock{
             stageLabel.innerHTML = this.starlab.phaseToStr(data[i].stage)
 
             stageRow.appendChild(stageLabel)
-            stageRow.onclick = ()=>{this.starlab.rewindByAge(data[i].start)}
+            stageRow.onclick = ()=>{this.starlab.rewindByAge(data[i].startAge)}
 
 
             clockStages.appendChild(stageRow)
@@ -53,7 +55,7 @@ class Clock{
     }
 
     setPointer(age){
-        const terminalAge = this.data[this.data.length-1].end
+        const terminalAge = this.data[this.data.length-1].endAge
         let marginLeft = 0
         let clockPointer = this.obj.getElementsByClassName("clock-pointer")[0]
         let clockStagesRows = this.obj.getElementsByClassName("clock-stage-row")
@@ -61,13 +63,13 @@ class Clock{
             i.classList.remove("clock-stage-row-selected")
         }
         for (let i in this.data){
-            if ((this.data[i].start <= age) && (age <= this.data[i].end)){
-                marginLeft+=((age - this.data[i].start)*100/terminalAge)
+            if ((this.data[i].startAge <= age) && (age <= this.data[i].endAge)){
+                marginLeft+=((age - this.data[i].startAge)*100/terminalAge)
                 clockStagesRows[i].classList.add("clock-stage-row-selected")
                 break
             }
             else{
-                marginLeft+=((this.data[i].end - this.data[i].start)*100/terminalAge)
+                marginLeft+=((this.data[i].endAge - this.data[i].startAge)*100/terminalAge)
                 // console.log()
             }
         }

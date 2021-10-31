@@ -6,7 +6,7 @@ class StarLab{
     inputData
     data
     evenedData
-    clockData
+    stagesData
 
     index
 
@@ -16,37 +16,47 @@ class StarLab{
 
     isStarted
 
+    isEqualTimeFrameEnabled
+
+    delayDivider
+    averageAgeGapDivider
+
     constructor(clockID, HRDiagramID, structureID, inputData) {
+        this.timeoutInc = 12.5
         this.inputData = inputData
 
-        // this.evenData()
-
-
+        this.stagesData = []
         this.data = this.inputData
+
+        // this.analyzeData()
+        // this.evenData()
         // this.data = this.evenedData
 
 
+        console.log(this.data)
         this.index = 0
         this.timeoutsIDs = []
         this.timeout = 100
-        this.timeoutInc = 12.5
         this.isStarted = false
-        this.clockData = []
+        this.isEqualTimeFrameEnabled = false
+
+        this.delayDivider = 1
+        this.averageAgeGapDivider = 20
 
         this.clock = new Clock(clockID, this)
         this.HRDiagram = new HRDiagram(HRDiagramID, this)
         this.structure = new Structure(structureID, this)
 
-        this.HRDiagram.genTrack(this.data)
+        this.HRDiagram.genTrack(this.inputData)
         this.analyzeData()
-        this.clock.build(this.clockData)
     }
 
     analyzeData(){
+        this.stagesData = []
         let stageCounter = -1;
         const checkStageInClockData = (stage) => {
             let flag = false;
-            for(let i of this.clockData){
+            for(let i of this.stagesData){
                 if(i.stage===stage){
                     flag = true;
                     break
@@ -58,17 +68,21 @@ class StarLab{
         for (let i = 1; i < this.data.length;++i){
             if(checkStageInClockData(this.data[i-1].properties.stage)){
                 if(this.data[i-1].properties.stage!==this.data[i].properties.stage || i === this.data.length-1){
-                    this.clockData[stageCounter].end = this.data[i-1].properties.age
+                    this.stagesData[stageCounter].endAge = this.data[i-1].properties.age
+                    this.stagesData[stageCounter].endIndex = i-1
                 }
             }else{
-                this.clockData.push({
+                this.stagesData.push({
                     stage: this.data[i-1].properties.stage,
-                    start: this.data[i-1].properties.age,
-                    end: undefined
+                    startAge: this.data[i-1].properties.age,
+                    startIndex: i-1,
+                    endAge: undefined,
+                    endIndex: undefined
                 })
                 ++stageCounter
             }
         }
+        this.clock.build(this.stagesData)
     }
 
     beautifyNumber(num, toFixed=0){
@@ -137,8 +151,9 @@ class StarLab{
             this.index = 0
         }
         for (let i = this.index; i < this.data.length; ++i) {
-            this.timeoutsIDs.push(setTimeout(this.step.bind(this), this.timeout += this.timeoutInc, this.data[i]))
+            this.timeoutsIDs.push(setTimeout(()=>{this.step(this.data[i])}, this.timeout += this.data[i].delay===-1 ? this.timeoutInc : this.data[i].delay/this.delayDivider))
         }
+        this.isStarted = true
     }
 
     togglePlay() {
@@ -150,7 +165,27 @@ class StarLab{
             this.start()
             btn.innerHTML = "Stop"
         }
-        this.isStarted = !this.isStarted;
+    }
+
+    toggleEqualTimeFrame(){
+        let checkbox = document.getElementById("equal-timeframeCB")
+        this.isEqualTimeFrameEnabled = checkbox.checked
+        let curAge = this.data[this.index].properties.age
+        let flag = this.isStarted
+        this.togglePlay()
+        if (this.isEqualTimeFrameEnabled) {
+            console.log("ENABLED")
+            this.analyzeData()
+            this.evenData()
+            this.data = this.evenedData
+        } else {
+            console.log("DISABLED")
+            this.data = this.inputData
+            this.analyzeData()
+        }
+        this.rewindByAge(curAge)
+        this.togglePlay()
+        this.changeSpeed(1)
     }
 
     stop() {
@@ -158,6 +193,7 @@ class StarLab{
             clearTimeout(i)
         }
         this.timeoutsIDs = []
+        this.isStarted = false
     }
 
     rewind(count) {
@@ -188,10 +224,18 @@ class StarLab{
     }
 
     changeSpeed(divider) {
-        this.togglePlay();
-        this.timeoutInc /= divider;
-        this.togglePlay();
-        document.getElementById("fps").innerHTML = 1000 / this.timeoutInc + ""
+        if(this.isEqualTimeFrameEnabled){
+            this.togglePlay()
+            this.delayDivider *= divider
+            this.togglePlay()
+            document.getElementById("speed").innerHTML = this.beautifyNumber((1000/this.timeoutInc)*((this.inputData[this.inputData.length-1].properties.age)/this.inputData.length/this.averageAgeGapDivider)*this.delayDivider, 2)  + " Years/s"
+        }
+        else {
+            this.togglePlay();
+            this.timeoutInc /= divider;
+            this.togglePlay();
+            document.getElementById("speed").innerHTML = 1000 / this.timeoutInc + " FPS"
+        }
     }
 
 
@@ -201,7 +245,7 @@ class StarLab{
 
         const terminalAge = this.inputData[this.inputData.length-1].properties.age
 
-        let averageAgeGap = terminalAge/this.inputData.length/20
+        let averageAgeGap = terminalAge/this.inputData.length/this.averageAgeGapDivider
 
         // console.log("AVG: "+averageAgeGap)
 
@@ -224,42 +268,50 @@ class StarLab{
             return i-1
         }
 
-        let hintIndex = 0
-        for(let i = 0; i < terminalAge; i+=averageAgeGap){
+        const stagePointsAmount = 1000
+        for(let i in this.stagesData){
 
-            // let leftBoundIndex = findLeftBound(i, curAge)
-            let leftBoundIndex = findLeftBound(hintIndex, i)
-            // console.log(leftBoundIndex)
-            let leftBoundAge = this.inputData[leftBoundIndex].properties.age
+            let calculatedAgeGap = (this.stagesData[i].endAge - this.stagesData[i].startAge)/stagePointsAmount
+            // console.log(calculatedAgeGap)
+            let hintIndex = this.stagesData[i].startIndex
 
-            // let rightBoundIndex = findRightBound(i, curAge)
-            let rightBoundIndex = Math.min(leftBoundIndex+1, this.inputData.length-1)
-            let rightBoundAge = this.inputData[rightBoundIndex].properties.age
+            let calculatedDelayInc = calculatedAgeGap*this.timeoutInc/averageAgeGap
 
-            hintIndex=leftBoundIndex
+            // console.log(this.timeoutInc)
 
-            // console.log("INDEX LEFT: " + leftBoundAge)
-            // console.log("INDEX MID: " + i)
-            // console.log("INDEX RIGHT: " + rightBoundAge)
+            for(let j = this.stagesData[i].startAge; j < this.stagesData[i].endAge;j+=calculatedAgeGap){
+                let leftBoundIndex = findLeftBound(hintIndex, j)
+                let leftBoundAge = this.inputData[leftBoundIndex].properties.age
 
-            let deltaAgeA = rightBoundAge-i
-            let deltaAgeA_B = rightBoundAge-leftBoundAge
+                let rightBoundIndex = Math.min(leftBoundIndex+1, this.inputData.length-1)
+                let rightBoundAge = this.inputData[rightBoundIndex].properties.age
 
-            let k = deltaAgeA_B/deltaAgeA
+                hintIndex=leftBoundIndex
 
 
-            this.evenedData.push({
-                structure: false,
-                properties: {
-                    luminosity: linearScaleByK(this.inputData[leftBoundIndex].properties.luminosity, this.inputData[rightBoundIndex].properties.luminosity, k),
-                    temperature: linearScaleByK(this.inputData[leftBoundIndex].properties.temperature, this.inputData[rightBoundIndex].properties.temperature, k),
-                    stage: this.inputData[leftBoundIndex].properties.stage,
-                    age: i,
-                    radius: linearScaleByK(this.inputData[leftBoundIndex].properties.radius, this.inputData[rightBoundIndex].properties.radius, k),
-                    mass: linearScaleByK(this.inputData[leftBoundIndex].properties.mass, this.inputData[rightBoundIndex].properties.mass, k),
-                }
-            })
+                let deltaAgeA = rightBoundAge-i
+                let deltaAgeA_B = rightBoundAge-leftBoundAge
+
+                let k = deltaAgeA_B/deltaAgeA
+
+
+                this.evenedData.push({
+                    structure: false,
+                    properties: {
+                        luminosity: linearScaleByK(this.inputData[leftBoundIndex].properties.luminosity, this.inputData[rightBoundIndex].properties.luminosity, k),
+                        temperature: linearScaleByK(this.inputData[leftBoundIndex].properties.temperature, this.inputData[rightBoundIndex].properties.temperature, k),
+                        stage: this.inputData[leftBoundIndex].properties.stage,
+                        age: j,
+                        radius: linearScaleByK(this.inputData[leftBoundIndex].properties.radius, this.inputData[rightBoundIndex].properties.radius, k),
+                        mass: linearScaleByK(this.inputData[leftBoundIndex].properties.mass, this.inputData[rightBoundIndex].properties.mass, k),
+                    },
+                    delay: calculatedDelayInc
+                })
+
+            }
         }
     }
+
+
 
 }

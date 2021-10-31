@@ -70,13 +70,13 @@
                                     <button onclick="starlab.changeSpeed(0.5)">0.5</button>
                                     <button onclick="starlab.changeSpeed(2)">2</button>
                                 </div>
-                                Current Speed: <span id="fps"></span>FPS
-{#                                <div>#}
-{#                                    <label>#}
-{#                                        Enable equal timeframe#}
-{#                                        <input type="checkbox" onclick="">#}
-{#                                    </label>#}
-{#                                </div>#}
+                                Current Speed: <span id="speed"></span>
+                                <div>
+                                    <label>
+                                        Enable equal timeframe
+                                        <input onclick="starlab.toggleEqualTimeFrame()" id="equal-timeframeCB" type="checkbox">
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>

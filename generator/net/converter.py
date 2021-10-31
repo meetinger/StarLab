@@ -311,7 +311,8 @@ def convert_to_starlab(data, throttle = 1):
                     'age':age,
                     'radius':get_radius(L0,T),
                     'mass': mass_remnant
-                }
+                },
+                'delay':-1
             })
 
     return converted
