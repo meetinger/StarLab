@@ -171,7 +171,6 @@ class StarLab{
         let checkbox = document.getElementById("equal-timeframeCB")
         this.isEqualTimeFrameEnabled = checkbox.checked
         let curAge = this.data[this.index].properties.age
-        let flag = this.isStarted
         this.togglePlay()
         if (this.isEqualTimeFrameEnabled) {
             console.log("ENABLED")
@@ -220,7 +219,7 @@ class StarLab{
         }
         this.togglePlay()
         this.step(this.data[this.index])
-
+        --this.index
     }
 
     changeSpeed(divider) {
