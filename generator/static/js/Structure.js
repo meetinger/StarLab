@@ -94,7 +94,7 @@ class Structure {
                 this.genStructure(stage) + '</div>';
         } else {
             this.obj.innerHTML = '<div class="structure-wrapper">' +
-                this.genStructure(stage) + '</div></div>' +
+                this.genStructure(stage) + '</div>' +
                 '<div style="text-align: right">Scale: 1/' + this.divider + '</div>';
         }
     }
@@ -120,7 +120,7 @@ class Structure {
 
             styleStr = "background-color: rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ");"+styleStr
 
-            return '<div> <div style="' + styleStr + '" class="shell"></div>'
+            return '<div style="' + styleStr + '" class="shell"></div>'
         } else {
 
             this.divider = this.getDivider(stage.structure[0].size)
