@@ -22,6 +22,7 @@ class Clock{
         const terminalAge = data[data.length-1].endAge
         let colorIndex = 0
         let clockBody = this.obj.getElementsByClassName("clock-body")[0]
+        clockBody.addEventListener("click", (event)=>{this.rewindByClickOnClock(event)})
         let clockStages = this.obj.getElementsByClassName("clock-stages")[0]
         clockBody.innerHTML = ""
         clockStages.innerHTML = ""
@@ -53,7 +54,13 @@ class Clock{
             ++colorIndex
         }
     }
-
+    rewindByClickOnClock(event){
+        let clockBody = this.obj.getElementsByClassName("clock-body")[0]
+        let clockBodyRect = clockBody.getBoundingClientRect()
+        let cursorX = event.pageX
+        let age = (cursorX-clockBodyRect.x)/clockBodyRect.width*this.data[this.data.length-1].endAge
+        this.starlab.rewindByAge(age)
+    }
     setPointer(age){
         const terminalAge = this.data[this.data.length-1].endAge
         let marginLeft = 0
