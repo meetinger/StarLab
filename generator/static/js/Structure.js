@@ -92,6 +92,7 @@ class Structure {
     }
 
     setStructure(stage) {
+        this.divider = this.getDivider(stage.properties.radius)
         if (this.divider === 1) {
             this.obj.innerHTML = '<div class="structure-wrapper">' +
                 this.genStructure(stage) + '</div>';
@@ -105,8 +106,7 @@ class Structure {
     genStructure(stage) {
         if (stage.structure === false) {
 
-            this.divider = this.getDivider(stage.properties.radius)
-
+            
             let shell = document.createElement("div")
 
             shell.classList.add("shell")
