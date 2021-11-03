@@ -80,10 +80,13 @@ class Structure {
     }
 
     getDivider(radius) {
-        let i = 1
-        while (2 * parseInt(radius) / i > 24) {
-            i *= 10;
-        }
+        // let i = 1
+        // while (2 * parseInt(radius) / i > 24) {
+        //     i *= 10;
+        // }
+
+        let i = Math.max(10**Math.ceil(Math.log10(radius/12)), 1)
+
         // console.log("getDivider: ", i)
         return i;
     }
@@ -104,23 +107,30 @@ class Structure {
 
             this.divider = this.getDivider(stage.properties.radius)
 
+            let shell = document.createElement("div")
+
+            shell.classList.add("shell")
+
             let style = {
                 width: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
                 height: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
-                "border-radius": 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
+                borderRadius: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
+                backgroundColor: "rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ")"
             }
 
-            let styleStr = JSON.stringify(style)
+            // let styleStr = JSON.stringify(style)
+            //
+            // styleStr = styleStr.substring(1, styleStr.length-1)
+            //
+            // styleStr = styleStr.replaceAll("\"", "")
+            //
+            // styleStr = styleStr.replaceAll(",", ";")
+            //
+            // styleStr = "background-color: rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ");"+styleStr
 
-            styleStr = styleStr.substring(1, styleStr.length-1)
+            Object.assign(shell.style, style)
 
-            styleStr = styleStr.replaceAll("\"", "")
-
-            styleStr = styleStr.replaceAll(",", ";")
-
-            styleStr = "background-color: rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ");"+styleStr
-
-            return '<div style="' + styleStr + '" class="shell"></div>'
+            return shell.outerHTML
         } else {
 
             this.divider = this.getDivider(stage.structure[0].size)

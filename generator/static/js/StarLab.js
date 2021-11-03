@@ -104,7 +104,7 @@ class StarLab{
     setProp(label, value) {
         let labels = document.getElementsByClassName(label)
         for (let i of labels) {
-            i.innerHTML = value
+            i.innerText = value
         }
     }
 
