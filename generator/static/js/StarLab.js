@@ -54,7 +54,7 @@ class StarLab{
     analyzeData(){
         this.stagesData = []
         let stageCounter = -1;
-        const checkStageInClockData = (stage) => {
+        const checkStageInStagesData = (stage) => {
             let flag = false;
             for(let i of this.stagesData){
                 if(i.stage===stage){
@@ -66,7 +66,7 @@ class StarLab{
         }
 
         for (let i = 1; i < this.data.length;++i){
-            if(checkStageInClockData(this.data[i-1].properties.stage)){
+            if(checkStageInStagesData(this.data[i-1].properties.stage)){
                 if(this.data[i-1].properties.stage!==this.data[i].properties.stage || i === this.data.length-1){
                     this.stagesData[stageCounter].endAge = this.data[i-1].properties.age
                     this.stagesData[stageCounter].endIndex = i-1
@@ -259,7 +259,7 @@ class StarLab{
         const findLeftBound = (startIndex, age) => {
             let i = startIndex
             while(i < this.inputData.length){
-                if(this.inputData[i].properties.age >= age){
+                if(this.inputData[i].properties.age > age){
                    return i
                 }
                 ++i;
