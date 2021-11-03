@@ -288,7 +288,7 @@ class StarLab{
                 hintIndex=leftBoundIndex
 
 
-                let deltaAgeA = rightBoundAge-i
+                let deltaAgeA = rightBoundAge-j
                 let deltaAgeA_B = rightBoundAge-leftBoundAge
 
                 let k = deltaAgeA_B/deltaAgeA
