@@ -244,7 +244,7 @@ class StarLab{
 
         const terminalAge = this.inputData[this.inputData.length-1].properties.age
 
-        let averageAgeGap = terminalAge/this.inputData.length/this.averageAgeGapDivider
+        const averageAgeGap = terminalAge/this.inputData.length/this.averageAgeGapDivider
 
         // console.log("AVG: "+averageAgeGap)
 
@@ -268,15 +268,16 @@ class StarLab{
         }
 
         const stagePointsAmount = 1000
+        const delayIncThreshold = 30
         for(let i in this.stagesData){
+            const ageDelta = (this.stagesData[i].endAge - this.stagesData[i].startAge)
 
-            let calculatedAgeGap = (this.stagesData[i].endAge - this.stagesData[i].startAge)/stagePointsAmount
-            // console.log(calculatedAgeGap)
-            let hintIndex = this.stagesData[i].startIndex
-
+            let stagePointsAmountMultiplier = Math.max(Math.ceil((ageDelta*this.timeoutInc)/(delayIncThreshold*stagePointsAmount*averageAgeGap)), 1)
+            let calculatedAgeGap = ageDelta/(stagePointsAmount*stagePointsAmountMultiplier)
             let calculatedDelayInc = calculatedAgeGap*this.timeoutInc/averageAgeGap
 
-            // console.log(this.timeoutInc)
+            let hintIndex = this.stagesData[i].startIndex
+            
 
             for(let j = this.stagesData[i].startAge; j < this.stagesData[i].endAge;j+=calculatedAgeGap){
                 let leftBoundIndex = findLeftBound(hintIndex, j)
