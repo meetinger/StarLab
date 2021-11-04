@@ -3,7 +3,8 @@ class Clock{
     starlab
     constructor(id, starlab) {
         this.obj = document.getElementById(id)
-        this.obj.innerHTML = '<div class="clock-body"></div>' +
+        this.obj.innerHTML = '<div class="clock-pointer-wrapper"><div class="clock-pointer clock-pointer-inverse"></div></div>' +
+            '<div class="clock-body"></div>' +
             '<div class="clock-pointer-wrapper"><div class="clock-pointer"></div></div>' +
             '<div class="clock-stages"></div>'
         this.starlab = starlab
@@ -64,7 +65,7 @@ class Clock{
     setPointer(age){
         const terminalAge = this.data[this.data.length-1].endAge
         let marginLeft = 0
-        let clockPointer = this.obj.getElementsByClassName("clock-pointer")[0]
+        let clockPointers = this.obj.getElementsByClassName("clock-pointer")
         let clockStagesRows = this.obj.getElementsByClassName("clock-stage-row")
         for(let i of clockStagesRows){
             i.classList.remove("clock-stage-row-selected")
@@ -80,7 +81,8 @@ class Clock{
                 // console.log()
             }
         }
-        clockPointer.style.left = "calc("+marginLeft+"% - 0.25rem)"
+        clockPointers[0].style.left = "calc("+marginLeft+"% - 0.25rem)"
+        clockPointers[1].style.left = "calc("+marginLeft+"% - 0.25rem)"
         // console.log(marginLeft)
     }
 }

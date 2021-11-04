@@ -21,6 +21,13 @@
     border-bottom: 0.5rem solid black;
     left: -0.25rem;
 }
+.clock-pointer-inverse{
+    border: 0.25rem solid transparent;
+    border-bottom: 0;
+    border-top: 0.5rem solid black;
+    left: -0.25rem;
+    margin-top: -0.5rem;
+}
 .clock-stages{
     margin-top: 0.75rem;
 }
