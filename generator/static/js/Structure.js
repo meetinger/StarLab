@@ -114,8 +114,8 @@ class Structure {
             let style = {
                 width: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
                 height: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
-                borderRadius: 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
-                backgroundColor: "rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ")"
+                "border-radius": 2 * parseFloat(stage.properties.radius) / this.divider + "rem",
+                "background-color": "rgb(" + this.colorTemperatureToRGB(stage.properties.temperature) + ")"
             }
 
             // let styleStr = JSON.stringify(style)
