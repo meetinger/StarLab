@@ -171,12 +171,19 @@ class HRDiagram {
                 let roundedTemp = round(curTemp, 500)
 
                 let element = document.createElement("div")
+
+                let elementX = this.getXByTemperature(roundedTemp)
+
+                if(elementX < 0 || elementX > 100){
+                    continue
+                }
+
                 element.classList.add("hr-diagram-bottom-scale-label")
 
                 element.innerHTML = '<div class="hr-diagram-bottom-scale-pointer"></div>' +
                     '<div class="hr-diagram-bottom-scale-label-value">' + roundedTemp + '</div>'
 
-                element.style.left = 'calc(' + this.getXByTemperature(roundedTemp) + '% - 2rem)'
+                element.style.left = 'calc(' + elementX + '% - 2rem)'
 
                 bottomScaleWrapper.appendChild(element)
             }
