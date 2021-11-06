@@ -30,7 +30,7 @@
         <div>
             <div class="properties">
                 <div style="width:30rem; padding:1rem">
-                    <div class="server-input">
+                    <div class="flex">
                         <form>
                             <div><small>Mass:</small></div>
                             <div id="input-mass">
@@ -41,6 +41,13 @@
                             </div>
                             <div>{{ generated }}</div>
                         </form>
+                        <div style="margin-top: 1rem">
+                            <label>
+                            Enable HR-diagram Autoscaling
+                            <input onclick="starlab.toggleAutoscaling()" id="enable-autoscaling" type="checkbox">
+                            </label>
+                        </div>
+                    </div>
                         <div class="play-settings">
                             <div>
                                 Controls:
@@ -56,10 +63,6 @@
                                         <button onclick="starlab.rewind(+10)">+10</button>
                                     </div>
                                 </div>
-                                <label>
-                                        Enable HR-diagram Autoscaling
-                                        <input onclick="starlab.toggleAutoscaling()" id="enable-autoscaling" type="checkbox">
-                                    </label>
                             </div>
                             <div class="speed">
                                 Speed:
@@ -74,7 +77,6 @@
                                         <input onclick="starlab.toggleEqualTimeFrame()" id="equal-timeframeCB" type="checkbox">
                                     </label>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
