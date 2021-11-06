@@ -1,40 +1,58 @@
-.hr-diagram-wrapper {
-    display: flex;
+.hr-diagram {
+    display: grid;
     width: 30rem;
     height: 25.6rem;
-    background-image: url("../img/hrdiagram.png");
+    /*background-image: url("../img/hrdiagram.png");*/
     /*//width:30rem;*/
     background-size: contain;
     background-repeat: no-repeat;
     /*//width: 100%;*/
     /*//height: 100%;*/
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    align-content: space-around;
+    /*flex-direction: column;*/
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    /*align-content: space-around;*/
     border: solid 0.2rem #00ccff;
     border-radius: 0.5rem 0 0 0;
-
+    grid-template-columns: 8.5fr 84fr 8.5fr;
+    grid-template-rows: 12.5fr 76fr 12.5fr;
+    grid-template-areas: ". header ."
+                         "left-scale inner ."
+                         ". bottom-scale ."
+;
 }
 
-.hr-diagram {
+.hr-diagram-inner {
     position: relative;
     /*//width: 100%;*/
     /*//height: 100%;*/
     /*//background-color: aqua;*/
     /*//min-width: 50rem;*/
     /*//min-height: 40rem;*/
-    width: 83%;
-    height: 75%;
-    display: flex;
-    /*//border: solid 0.2rem #00ccff;*/
-    /*//border-radius: 0.5rem 0 0.5rem 0;*/
 
+
+    /*width: 83%;*/
+    /*height: 75%;*/
+
+    display: flex;
+    border: solid 0.1rem black;
+    /*//border-radius: 0.5rem 0 0.5rem 0;*/
+    border-bottom: 0;
     /*//align-items: end;*/
 
+    grid-area: inner;
+}
+.hr-diagram-left-scale{
+    grid-area: left-scale;
+    position: relative;
 }
 
-.hr-point {
+.hr-diagram-bottom-scale{
+    grid-area: bottom-scale;
+    position: relative;
+}
+
+.hr-diagram-point {
     position: absolute;
     width: 0.5rem;
     height: 0.5rem;
@@ -46,20 +64,75 @@
     transition: 0.025s;
 }
 
-.track {
+.hr-diagram-track {
     position: absolute;
     width: 0.15rem;
     height: 0.15rem;
     z-index: 0;
     background-color: gray;
     border-radius: 0.5rem;
+
+}
+
+.hr-diagram-gradient{
+    position: relative;
+    border: solid 0.1rem black;
+    height: 0.85rem;
+    z-index: 5;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.hr-diagram-left-scale-label{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    margin-left: 0.75rem;
+    /*margin-right: -1rem;*/
+    justify-content: start;
+    height: 1rem;
+}
+
+.hr-diagram-left-scale-pointer{
+    position: absolute;
+    height: 1px;
+    width: 1rem;
+    background-color: black;
+    /*margin-left: 0.1rem;*/
+    /*float: right;*/
+}
+
+.hr-diagram-bottom-scale-label{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -1.5rem;
+    font-size: 0.75rem;
+    width: 4rem;
+}
+
+.hr-diagram-bottom-scale-pointer{
+    height: 2rem;
+    width: 1px;
+    background-color: black;
+}
+
+.hr-diagram-gradient-element{
+    height: 100%;
+    width: 100%;
 }
 
 .hr-header {
     height: 1rem;
     text-align: center;
+    grid-area: header;
 }
 
 .hr-footer {
     height: 1rem;
+}
+.hr-diagram-aux{
+
 }

@@ -18,15 +18,8 @@
     </nav>
     <div class="body">
         <div class="section">
+            <div class="hr-diagram" id="hr-diagram">
 
-            <div class="hr-diagram-wrapper">
-                <div class="hr-header text-center">
-                    <div>Hertzsprung–Russell Diagram</div>
-                    <div><b>Stage: </b><span class="stage-label"></span></div>
-                </div>
-                <div class="hr-diagram" id="hr-diagram">
-                </div>
-                <div class="hr-footer"></div>
             </div>
 
             <div class="structure" id="structure">
@@ -63,6 +56,10 @@
                                         <button onclick="starlab.rewind(+10)">+10</button>
                                     </div>
                                 </div>
+                                <label>
+                                        Enable HR-diagram Autoscaling
+                                        <input onclick="starlab.toggleAutoscaling()" id="enable-autoscaling" type="checkbox">
+                                    </label>
                             </div>
                             <div class="speed">
                                 Speed:
@@ -98,6 +95,7 @@
 </body>
 {% load static %}
 {#<script src="{% static 'js/db.js' %}"></script>#}
+<script src="{% static 'js/Utils.js' %}"></script>
 <script src="{% static 'js/StarLab.js' %}"></script>
 <script src="{% static 'js/HRDiagram.js' %}"></script>
 <script src="{% static 'js/Structure.js' %}"></script>

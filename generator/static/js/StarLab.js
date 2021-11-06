@@ -17,6 +17,7 @@ class StarLab{
     isStarted
 
     isEqualTimeFrameEnabled
+    isAutoscalingEnabled
 
     delayDivider
     averageAgeGapDivider
@@ -47,8 +48,10 @@ class StarLab{
         this.HRDiagram = new HRDiagram(HRDiagramID, this)
         this.structure = new Structure(structureID, this)
 
-        this.HRDiagram.genTrack(this.inputData)
+        // this.HRDiagram.build(this.inputData, false)
+        // this.HRDiagram.genTrack(this.inputData)
         this.analyzeData()
+        this.toggleAutoscaling()
     }
 
     analyzeData(){
@@ -185,6 +188,14 @@ class StarLab{
         this.rewindByAge(curAge)
         this.togglePlay()
         this.changeSpeed(1)
+    }
+
+    toggleAutoscaling(){
+        let checkbox = document.getElementById("enable-autoscaling")
+        this.isAutoscalingEnabled = checkbox.checked
+        this.HRDiagram.build(this.inputData, this.isAutoscalingEnabled)
+        this.step(this.data[this.index])
+        --this.index
     }
 
     stop() {
