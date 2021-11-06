@@ -154,8 +154,14 @@ class HRDiagram {
                 let pointer = document.createElement("div")
                 pointer.classList.add("hr-diagram-left-scale-pointer")
 
-                element.style.top = 'calc(' + this.getYByLuminosity(10 ** i) + '% - 0.5rem)'
-                pointer.style.top = 'calc(' + this.getYByLuminosity(10 ** i) + '%)'
+                let elementY = this.getYByLuminosity(10 ** i)
+
+                if(elementY < 0 || elementY > 100){
+                    continue
+                }
+
+                element.style.top = 'calc(' + elementY + '% - 0.5rem)'
+                pointer.style.top = 'calc(' + elementY + '%)'
 
                 leftScaleWrapper.appendChild(element)
                 HRDiagramInner.appendChild(pointer)
