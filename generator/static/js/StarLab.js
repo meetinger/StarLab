@@ -143,7 +143,7 @@ class StarLab{
         this.setProp("mass-label", stage.properties.mass.toFixed(2))
         this.setProp("stage-label", this.phaseToStr(stage.properties.stage))
         this.clock.setPointer(stage.properties.age)
-        if (this.index >= this.data.length - 1) {
+        if (this.index >= this.data.length - 1 && this.isStarted) {
             this.togglePlay()
         }
     }
