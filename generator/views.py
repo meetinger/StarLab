@@ -18,7 +18,7 @@ def index(request):
     except ValueError:
         mass = 1.0
         
-    mass = min(mass, 120)
+    mass = min(max(mass, 0.1), 120)
 
     # start_time = time.time()
     # print("--- %s seconds ---" % (time.time() - start_time))
