@@ -1,45 +1,73 @@
-.main{
-  width: 50%;
-  min-width: 53rem;
-  margin: auto;
-  font-family: Open Sans, serif;
+.main {
+    width: 50%;
+    min-width: 53rem;
+    margin: auto;
+    font-family: Open Sans, serif;
 }
-html, body{
-  padding: 0!important;
-  margin: 0!important;
+
+html, body {
+    padding: 0 !important;
+    margin: 0 !important;
 }
-.body{
-  /*display: flex;*/
-  border: solid #0088ff;
-  border-radius: 0.65rem;
-  /*flex-wrap: wrap;*/
-  /*background-color: blanchedalmond;*/
+
+.body {
+    /*display: flex;*/
+    border: solid #0088ff;
+    border-radius: 0.65rem;
+    /*flex-wrap: wrap;*/
+    /*background-color: blanchedalmond;*/
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }
-.properties{
-  display: flex;
-  justify-content: space-evenly;
-  padding: 1rem;
-}
-.section{
-  display: flex;
-  width: 100%;
-}
-.checkbox-div{
-  display: flex;
+
+.checkbox-div {
+    display: flex;
     justify-content: space-between;
-  align-content: center;
-  align-items: center;
-  /*padding-top:1rem;*/
+    align-content: center;
+    align-items: center;
+    /*padding-top:1rem;*/
 }
-.btn{
-  border: none;
+
+.btn {
+    border: none;
     outline: none;
     background-color: #00ccff;
-  color: white;
-  border-radius: 0.125rem;
-  /*margin: 0.25rem;*/
+    color: white;
+    border-radius: 0.125rem;
+    /*margin: 0.25rem;*/
 }
-.play-settings{
-  display: flex;
-  justify-content: space-between;
+
+.properties-card {
+    position: relative;
+    border: solid 0.1rem #00ccff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    display: inline-block;
+    margin-bottom: 1rem;
+    width: 100%;
+}
+
+.properties-card-header {
+    position: absolute;
+    font-size: 0.75rem;
+    color: #0088ff;
+    background-color: white;
+    top: -0.75rem;
+    display: inline;
+    padding: 0.2rem;
+}
+
+#input-mass {
+    height: 2rem;
+}
+
+.properties-section{
+    padding-top: 1rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+.control-section{
+    padding: 1rem;
 }

@@ -12,3 +12,5 @@ db.sqlite3
 generator/utils/__pycache__/
 
 generator/net/__pycache__/
+
+__pycache__/
