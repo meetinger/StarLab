@@ -13,8 +13,11 @@ def index(request):
     mass = request.GET.get('mass')
     if mass is None:
         mass = 1.0
-    mass = float(mass)
-
+    try:
+        mass = float(mass)
+    except ValueError:
+        mass = 1.0
+        
     mass = min(mass, 120)
 
     # start_time = time.time()
