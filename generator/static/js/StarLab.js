@@ -132,8 +132,10 @@ class StarLab{
         return arr[Math.round(phase)]
     }
 
-    step(stage) {
-        ++this.index;
+    step(stage, incIndex = true) {
+        if(incIndex) {
+            ++this.index;
+        }
         this.HRDiagram.setPoint(stage.properties.luminosity, stage.properties.temperature)
         this.structure.setStructure(stage)
         this.setProp("age-label", this.beautifyNumber(stage.properties.age, 2))
@@ -148,9 +150,9 @@ class StarLab{
         }
     }
 
-    start() {
+    start(resetIndex = true) {
         this.timeout = 0
-        if (this.index >= this.data.length - 1) {
+        if ((this.index >= this.data.length - 1) && resetIndex) {
             this.index = 0
         }
         for (let i = this.index; i < this.data.length; ++i) {
@@ -159,13 +161,13 @@ class StarLab{
         this.isStarted = true
     }
 
-    togglePlay() {
+    togglePlay(resetIndex = true) {
         let btn = document.getElementById("start-stop-btn")
         if (this.isStarted) {
             this.stop()
             btn.innerHTML = "Start"
         } else {
-            this.start()
+            this.start(resetIndex)
             btn.innerHTML = "Stop"
         }
     }
@@ -194,8 +196,7 @@ class StarLab{
         let checkbox = document.getElementById("enable-autoscaling")
         this.isAutoscalingEnabled = checkbox.checked
         this.HRDiagram.build(this.inputData, this.isAutoscalingEnabled)
-        this.step(this.data[this.index])
-        --this.index
+        this.step(this.data[this.index], false)
     }
 
     stop() {
@@ -207,7 +208,7 @@ class StarLab{
     }
 
     rewind(count) {
-        this.togglePlay()
+        this.togglePlay(false)
         if (this.index + count > (this.data.length - 1)) {
             this.index = this.data.length - 1
         } else if (this.index + count < 0) {
@@ -215,9 +216,8 @@ class StarLab{
         } else {
             this.index = this.index + count;
         }
-        this.togglePlay()
-        this.step(this.data[this.index])
-        --this.index;
+        this.togglePlay(false)
+        this.step(this.data[this.index], false)
     }
 
     rewindByAge(age){
@@ -229,8 +229,7 @@ class StarLab{
             }
         }
         this.togglePlay()
-        this.step(this.data[this.index])
-        --this.index
+        this.step(this.data[this.index], false)
     }
 
     changeSpeed(divider) {
