@@ -259,14 +259,6 @@ class StarLab{
 
         // console.log("AVG: "+averageAgeGap)
 
-        function linearScale(x, x1, x2, y1, y2){
-            return y1+(x-x1)*(y2-y1)/(x2-x1)
-        }
-
-        function linearScaleByK(Xmin, Xmax, k){
-            return (Xmax - Xmin) * k + Xmin
-        }
-
         const findLeftBound = (startIndex, age) => {
             let i = startIndex
             while(i < this.inputData.length){

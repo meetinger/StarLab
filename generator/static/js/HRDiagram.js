@@ -204,12 +204,10 @@ class HRDiagram {
     genTrack(inputData) {
         // let divs = []
         let trackPoints = ""
-        for (let i = 0; i < inputData.length; ++i) {
-            //TODO add interpolation
-
+        const createPoint = (x, y) =>{
             let style={
-                top: 'calc(' + this.getYByLuminosity(inputData[i].properties.luminosity) + '% - 0.075rem)',
-                left: 'calc(' + this.getXByTemperature(inputData[i].properties.temperature) + '% - 0.075rem)'
+                top: 'calc(' + y + '% - 0.075rem)',
+                left: 'calc(' + x + '% - 0.075rem)'
             }
 
             let styleStr = JSON.stringify(style)
@@ -219,6 +217,34 @@ class HRDiagram {
             styleStr = styleStr.replaceAll("\"", "")
             styleStr = styleStr.replaceAll(",", ";")
             trackPoints+="<div class='hr-diagram-track' style='"+styleStr+"'></div>";
+        }
+
+        createPoint(this.getXByTemperature(inputData[0].properties.temperature), this.getYByLuminosity(inputData[0].properties.luminosity))
+
+
+        const deltaFactor = 0.5
+        for (let i = 1; i < inputData.length; ++i) {
+            //TODO add interpolation
+
+            let oldX = this.getXByTemperature(inputData[i-1].properties.temperature)
+            let oldY = this.getYByLuminosity(inputData[i-1].properties.luminosity)
+            let oldAge = inputData[i-1].properties.age
+
+
+            let curX = this.getXByTemperature(inputData[i].properties.temperature)
+            let curY = this.getYByLuminosity(inputData[i].properties.luminosity)
+            let curAge = inputData[i].properties.age
+
+            let deltaCoords = Math.sqrt((curX-oldX)**2+(curY-oldY)**2)
+
+            let steps = Math.max(deltaCoords/deltaFactor, 1)
+
+            for(let j = oldAge; j < curAge; j+=((curAge-oldAge)/steps)){
+                let x = linearScale(j, oldAge, curAge, oldX, curX)
+                let y = linearScale(j, oldAge, curAge, oldY, curY)
+
+                createPoint(x, y)
+            }
         }
         this.inner.innerHTML += trackPoints
     }
