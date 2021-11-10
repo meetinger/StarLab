@@ -10,5 +10,6 @@ It's shows a visualization of the evolution of a star
 3. Visualization of the duration of evolutionary stages
 4. Rewind support(by frames and to stages)
 5. Speed settings
+6. HR-diagram autoscaling
 
 ## [Try it Now!](https://starlabs.herokuapp.com/)
