@@ -54,6 +54,19 @@ class StarLab{
         this.toggleAutoscaling()
     }
 
+    update(inputData){
+        this.inputData = inputData
+
+        this.stagesData = []
+        this.data = this.inputData
+
+        this.index = 0
+
+        this.analyzeData()
+        this.toggleAutoscaling()
+        this.toggleEqualTimeFrame()
+    }
+
     analyzeData(){
         this.stagesData = []
         let stageCounter = -1;
@@ -166,8 +179,12 @@ class StarLab{
         if (this.isStarted) {
             this.stop()
             btn.innerHTML = "Start"
+            btn.classList.remove("btn-red")
+            btn.classList.add("btn-green")
         } else {
             this.start(resetIndex)
+            btn.classList.remove("btn-green")
+            btn.classList.add("btn-red")
             btn.innerHTML = "Stop"
         }
     }

@@ -17,14 +17,32 @@
     background-color: #00ccff;
     color: white;
     padding: 0.5rem;
-    border-radius: 0.25rem;
     transition: 0.1s;
     cursor: pointer;
     font-size: 1rem;
+    border: none;
+    outline: none;
+    border-radius: 0.125rem;
 }
 .btn:hover{
     background-color: #0088ff;
 }
+
+.btn-green{
+    background-color: #00d300;
+}
+.btn-green:hover{
+    background-color: #00b000;
+}
+
+.btn-red{
+    background-color: red;
+}
+
+.btn-red:hover{
+    background-color: #c00000;
+}
+
 form{
     margin: 0;
 }

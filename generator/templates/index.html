@@ -35,26 +35,27 @@
             <div class="flex">
                 <div class="properties-card">
                     <div class="properties-card-header">Mass</div>
-                    <form>
                         <div id="input-mass">
                             <label>
-                                <input class="field" name="mass" type="text" value="{{ curMass }}">
-                                <button class="btn">Generate!</button>
+                                <input id="input-mass-field" class="field" name="mass" type="text" value="{{ curMass }}">
+                                <button onclick="getData(true)" class="btn">Generate!</button>
                             </label>
+                            <div id="loading-lbl">Loading...</div>
                         </div>
-                        <div style="margin-top: 1rem">{{ generated }}</div>
-                    </form>
+                        <div id="generated-by" style="margin-top: 1rem">{{ generated }}</div>
                 </div>
             </div>
             <div class="flex">
                 <div class="properties-card">
                     <div class="properties-card-header">Play Settings</div>
                     <div>
-                        Controls:
                         <div>
-                            <button onclick="starlab.togglePlay()" id="start-stop-btn">Start</button>
+                            Controls:
+                            <div>
+                                <button style="min-width: 5rem" class="btn btn-green" onclick="starlab.togglePlay()" id="start-stop-btn">Start</button>
+                            </div>
                         </div>
-                        <div class="rewind">
+                        <div>
                             Rewind:
                             <div>
                                 <button onclick="starlab.rewind(-10)">-10</button>
@@ -64,7 +65,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="speed">
+                    <div>
                         Speed:
                         <div>
                             <button onclick="starlab.changeSpeed(0.5)">0.5</button>
@@ -111,13 +112,41 @@
 <script src="{% static 'js/Clock.js' %}"></script>
 
 <script>
+    let inputData = [];
+    let starlab;
 
-    const inputData = {{ data | safe }};
+    function getData(update=true){
+        let req = new XMLHttpRequest()
+        let massField = document.getElementById("input-mass-field")
+        let loadingLbl = document.getElementById("loading-lbl")
+        loadingLbl.style.display = "flex";
+        req.onprogress = ()=>{
+            loadingLbl.style.display = "flex";
+        }
+        req.onload = ()=>{
+            if (req.status === 200) {
+                let rawData = JSON.parse(req.response)
+                inputData = rawData.data
+                document.getElementById("generated-by").innerText = rawData.generated
+                massField.value = rawData.curMass
+                if(update) {
+                    starlab.update(inputData)
+                }else{
+                    starlab = new StarLab("clock", "hr-diagram", "structure", inputData)
+                    starlab.changeSpeed(1)
+                    starlab.step(inputData[0]);
+                }
+                loadingLbl.style.display = "none";
+            }
+            else {
+                alert('Server Error')
+            }
+        }
+        req.open("POST", "/getData", true);
+        req.setRequestHeader("Content-Type", "application/json; charset=utf-8");
 
-    let starlab = new StarLab("clock", "hr-diagram", "structure", inputData)
-
-
-    starlab.changeSpeed(1)
-    starlab.step(inputData[0]);
+        req.send(JSON.stringify({mass: parseFloat(massField.value)}));
+    }
+    getData(false)
 </script>
 </html>

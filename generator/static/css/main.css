@@ -29,15 +29,6 @@ html, body {
     /*padding-top:1rem;*/
 }
 
-.btn {
-    border: none;
-    outline: none;
-    background-color: #00ccff;
-    color: white;
-    border-radius: 0.125rem;
-    /*margin: 0.25rem;*/
-}
-
 .properties-card {
     position: relative;
     border: solid 0.1rem #00ccff;
@@ -60,6 +51,13 @@ html, body {
 
 #input-mass {
     height: 2rem;
+    display: flex;
+}
+
+#loading-lbl{
+    display: flex;
+    align-items: center;
+    margin-left: 3rem;
 }
 
 .properties-section{
