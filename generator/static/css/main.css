@@ -57,7 +57,7 @@ html, body {
 #loading-lbl{
     display: flex;
     align-items: center;
-    margin-left: 3rem;
+    margin: auto;
 }
 
 .properties-section{
